@@ -1,0 +1,46 @@
+// .table-responsive{
+//   overflow-y: auto!important;
+//   height: 60vh!important;
+// }
+
+@media(max-width: 992px){
+  .navbar i{
+    margin-right: 20px;
+  }
+  .navbar li{
+    border: 1px solid #ccc;
+  }
+}
+
+// @media(max-width: 900px){
+//   .table-responsive{
+//     height: 55vh!important;
+//   }
+// }
+// @media(max-width: 500px){
+//   .table-responsive{
+//     height: 40vh!important;
+//   }
+// }
+.green-text{
+  color: green;
+  font-weight: bold !important;
+}
+.red-text{
+  color: red;
+  font-weight: bold;
+}
+.red-text *{
+  font-weight: bold!important;
+}
+.guard-map{
+  height: 75vh!important;
+  width: 100%!important;
+}
+.card{
+  height: 85vh!important;
+  width: 100%;
+}
+.btn-small{
+  padding-top: -10px!important;
+}

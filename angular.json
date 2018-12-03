@@ -27,9 +27,29 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              {
+                "input": "node_modules/@angular/material/prebuilt-themes/indigo-pink.css"
+              },
+              "./node_modules/font-awesome/scss/font-awesome.scss",
+              "./node_modules/angular-bootstrap-md/scss/bootstrap/bootstrap.scss",
+              "./node_modules/angular-bootstrap-md/scss/mdb-free.scss",
+              "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
+              "src/styles.scss",
+              "src/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datepicker3.min.css",
+              "src/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "./node_modules/jquery/dist/jquery.min.js",
+              "src/assets/MDB Free/js/jquery-3.3.1.min.js",
+              "src/assets/MDB Free/js/popper.min.js",
+              "src/assets/MDB Free/js/bootstrap.min.js",
+              "src/assets/MDB Free/js/mdb.min.js",
+              "src/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datepicker.min.js",
+              "src/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js",
+              "./node_modules/chart.js/dist/Chart.js",
+              "./node_modules/hammerjs/hammer.min.js",
+              "src/assets/custom/js/main.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -76,6 +96,9 @@
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "styles": [
+              {
+                "input": "node_modules/@angular/material/prebuilt-themes/indigo-pink.css"
+              },
               "src/styles.scss"
             ],
             "scripts": [],

@@ -1,0 +1,114 @@
+<div class="container-fluid">
+
+  <div class="row my-3 row-custom">
+    <!-- guard action card start -->
+    <div class="col-12">
+      <!-- card filter start -->
+      <div class="card card-action">
+        <div class="card-header bg-main-color custom-card-header">
+          <h5>
+            <i class="fa fa-filter"></i> <span class="trn">Filters</span>
+          </h5>
+        </div>
+        <div class="card-body custom-card-body">
+          <div class="row">
+            <div class="col-md-4 mt-2">
+              <label for="" class="trn">by Month:</label>
+              <app-select-month #selectMonth [type]="3" (clickViewEvent)="showIncidentReport('month')" (clickChartEvent)="showChartIncidentReport('month')">
+
+              </app-select-month>
+            </div>
+            <div class="col-md-4 mt-2">
+              <label for="" class="trn">by Week:</label>
+              <app-select-week #selectWeek [type]="3" (clickViewEvent)="showIncidentReport('week')" (clickChartEvent)="showChartIncidentReport('week')">
+
+              </app-select-week>
+            </div>
+            <div class="col-md-4 mt-2"></div>
+          </div>
+         
+        </div>
+      </div>
+      <!-- guard action card end -->
+    </div>
+
+  </div>
+
+  <div class="row my-3">
+    <div class="col-12">
+        <!-- card violationMin start -->
+        <div class="card card-incident">
+          <div class="card-header bg-main-color custom-card-header">
+            <h5>
+              <i class="fa fa-exclamation-triangle"></i> <span class="trn">Incident History</span>
+            </h5>
+          </div>
+          <div class="card-body custom-card-body">
+            <div class="row">
+              <div class="col-12">
+                <h5 class="text-center">
+                  Data of Patrolling performance
+                </h5>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover table-striped table-condensed text-center custom-table min-height-table ">
+               <thead>
+                <tr>
+                  <th rowspan="2" class="font-weight-bold">Day</th>
+                  <th rowspan="2" class="font-weight-bold">Date</th>
+                  <th rowspan="2" class="font-weight-bold">Weekend NO.</th>
+                  <th rowspan="2" class="font-weight-bold">Number of Violation</th>
+                  <th colspan="'{{ numOfIncidents }}'" *ngIf="arrIncidentsID" class="font-weight-bold border bg-success">Types of Violation</th>
+                </tr>
+                <tr class="trIncident">
+                  <th *ngFor="let incident of arrIncidents">{{ incident }}</th>
+                </tr>
+               </thead>
+               <tbody>
+                <tr *ngFor="let row of arrRows">
+                  <td>{{ row.sDay }}</td>
+                  <td>{{ row.dDate }}</td>
+                  <td>{{ row.iWeek }}</td>
+                  <td>{{ getNumOfViolationsByDate(row) }}</td>
+                  <td *ngFor="let id of arrIncidentsID">{{ row[id] }}</td>
+                </tr>
+               </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!-- card violationMin end -->
+    </div>
+  </div>
+  
+</div>
+
+<div mdbModal #modalChart="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close pull-right" aria-label="Close" (click)="modalChart.hide()">
+            <span aria-hidden="true">×</span>
+          </button>
+          <h5 class="modal-title w-100">Chart Report</h5>
+        </div>
+        <div class="modal-body">
+          <div #chartArea></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" mdbBtn color="secondary" class="waves-light btn btn-custom bg-main-color trn"
+            aria-label="Close" (click)="modalChart.hide()" mdbWavesEffect>Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<app-alert-success #alertSuccess [content]="alertSuccessContent">
+
+</app-alert-success>
+
+<app-alert-error #alertError [content]="alertErrorContent">
+
+</app-alert-error>

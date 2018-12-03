@@ -1,0 +1,159 @@
+<div class="container-fluid">
+
+    <div class="row row-custom">
+      <!-- filter card -->
+      <div class="col-lg-3 mt-3">
+        <!-- card filter start -->
+        <div class="card card filter">
+          <div class="card-header bg-main-color custom-card-header">
+            <h4>
+              <i class="fa fa-filter"></i> <span class="trn">Search</span>
+            </h4>
+          </div>
+          <div class="card-body custom-card-body">
+            <div class="row mt-3">
+              <div class="col-12">
+                <button class="btn btn-custom bg-main-color pull-right trn" (click)="showInsertModal()">Insert</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- card filter end -->
+      </div>
+
+      <div class="col-lg-9 mt-3">
+
+        <!-- card group start -->
+        <div class="card card-groups">
+          <div class="card-header bg-main-color custom-card-header">
+            <h4>
+              <i class="fa fa-exclamation-triangle"></i> <span class="trn">Groups</span>
+            </h4>
+          </div>
+          <div class="card-body custom-card-body">
+            <div class="row my-3">
+              <div class="col-sm-8">
+                <div>
+                  <pagination-controls (pageChange)="currentPage = $event">
+
+                  </pagination-controls>
+                </div>
+              </div> 
+              <div class="col-sm-4">
+                <div id="totalGroups">
+                  <strong>Total Groups: </strong>
+                  <span>{{ arrGroupList?.length }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover table-striped table-condensed text-center custom-table min-height-table" id="tblGroup">
+                  <thead class="custom-table-header">
+                    <tr>
+                      <th class="trn">#</th>
+                      <th class="trn">Group ID</th>
+                      <th class="trn">Group Name</th>
+                      <th class="trn">Leader</th>
+                      <th class="trn"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      <tr *ngFor="let group of arrGroupList | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ group.iGuardGroupID }}</td>
+                        <td>{{ group.sGroupName }}</td>
+                        <td>{{ group.sGuardName }}</td>
+                        <td>
+                          <div class="btn-group" mdbDropdown>
+                            <button mdbDropdownToggle type="button" class="btn btn-custom bg-main-color btn-custom-small dropdown-toggle" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                              <span class="trn">Action</span>
+                            </button>
+                            <div class="dropdown-menu" >
+                              <button class="btn btn-custom bg-info btn-custom-small dropdown-item trn" (click)="showUpdateModal(group)">Update</button>
+                              <button class="btn btn-custom bg-danger btn-custom-small dropdown-item trn" (click)="showConfirmDelete(group)">Delete</button>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                  </tbody>
+                </table>
+            </div>
+          </div>
+        </div>
+        <!-- card group end -->
+      </div>
+    </div>
+  </div>
+
+  <div mdbModal #modalInsert="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+    aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalInsert.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h5 class="modal-title w-100">Insert Group</h5>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group">
+              <label class="trn">Group Name</label>
+              <input type="text" class="form-control" [(ngModel)]="currentGroup.sGroupName">
+            </div>
+            <div class="form-group">
+              <label class="trn">Guard Leader</label>
+              <app-select-guard-list [type]="1" [all]="false" #selectGuardInsert>
+  
+              </app-select-guard-list>
+            </div>
+            <button class="btn btn-custom btn-success pull-right trn" (click)="insertGroup()">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mdbModal #modalUpdate="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalUpdate.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h5 class="modal-title w-100">Update Group</h5>
+      </div>
+      <div class="modal-body">
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <label class="trn">Group Name</label>
+                <input type="text" class="form-control" [(ngModel)]="currentGroup.sGroupName">
+              </div>
+              <div class="form-group">
+                <label class="trn">Guard Leader</label>
+                <app-select-guard-list [type]="1" [all]="false" #selectGuardUpdate>
+  
+                </app-select-guard-list>
+              </div>
+              <button class="btn btn-custom btn-success pull-right trn" (click)="updateGroup()">Save</button>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-alert-success #alertSuccess [content]="alertSuccessContent">
+
+</app-alert-success>
+
+<app-alert-error #alertError [content]="alertErrorContent">
+
+</app-alert-error>
+
+<app-alert-warning #alertWarning [content]="alertWarningContent" (confirmEvent)="deleteGroup()"></app-alert-warning>

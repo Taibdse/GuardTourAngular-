@@ -1,0 +1,139 @@
+<div class="container-fluid">
+  <div class="row my-3 row-custom">
+    <div class="col-lg-3 mb-4">
+      <!-- card filter start -->
+      <div class="card card filter">
+        <div class="card-header bg-main-color custom-card-header">
+          <h4>
+            <i class="fa fa-filter"></i> <span class="trn">Search</span>
+          </h4>
+        </div>
+        <div class="card-body custom-card-body">
+          <div class="row mt-3">
+            <div class="col-12">
+              <label for="" class="trn">by Group</label><br>
+              <app-select-guard-list #selectGuard [type]="1" [formControlSm]="true">
+
+              </app-select-guard-list>
+            </div>
+          </div>
+          <div class="row my-4">
+            <div class="col-12">
+              <label for="" class="trn">by Week</label>
+              <app-select-week #selectWeek [type]="2" [formControlSm]="true" (clickEvent)="showData('week')">
+
+              </app-select-week>
+            </div>
+          </div>
+          <div class="row my-4">
+            <div class="col-12">
+              <label for="" class="trn">by Month</label>
+              <app-select-month #selectMonth [type]="2" [formControlSm]="true" (clickEvent)="showData('month')">
+
+              </app-select-month>
+            </div>
+          </div>
+          <div class="row my-4">
+            <div class="col-12">
+              <label for="" class="trn">by Year</label>
+              <app-select-year #selectYear [type]="2" [formControlSm]="true" (clickEvent)="showData('year')">
+
+              </app-select-year>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- card filter end -->
+    </div>
+
+    <div class="col-lg-9">
+      <!-- card Points start -->
+      <div class="card card-tourReport">
+        <div class="card-header bg-main-color custom-card-header">
+          <h4>
+            <i class="fa fa-exclamation-triangle"></i> <span class="trn">Report Tours</span>
+          </h4>
+        </div>
+        <div class="card-body custom-card-body">
+          <div class="row">
+            <div class="col-12">
+              <div #chartArea style="height: 70vh;"></div>
+            </div>
+          </div>
+          <div class="table-responsive mt-5">
+            <table class="table table-hover table-striped table-condensed custom-table text-center" id="tblReport">
+                <thead class="custom-table-header">
+                  <tr>
+                    <th class="trn">Name</th>
+                    <th class="trn">Day</th>
+                    <th class="trn">Week</th>
+                    <th class="trn">Month</th>
+                    <th class="trn">Day in Month</th>
+                    <th class="trn">Working Per</th>
+                    <th class="trn">Total Time-working</th>
+                    <th class="trn">Idling Per</th>
+                    <th class="trn">Date Check</th>
+                    <th class="trn">Working Time Required</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of arrReports">
+                    <td>{{ item.sGuardName }}</td>
+                    <td>{{ item.sDay }}</td>
+                    <td>{{ item.iWeek }}</td>
+                    <td>{{ item.iMonth }}</td>
+                    <td>{{ item.iDay }}</td>
+                    <td>{{ item.dWorkingPercent }}</td>
+                    <td>{{ item.dTotalTimeWorking }}</td>
+                    <td>{{ item.dIdlingPercent }}</td>
+                    <td>{{ item.dDateCheck }}</td>
+                    <td>{{ item.WorkTimeRequire }}</td>
+                  </tr>
+                </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- card Points end -->
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="modal fade" id="modalTableReport" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog  modal-lg modal-dialog-custom" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Chart report</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="table-responsive">
+                  <table class="table table-striped table-hover custom-table text-center" id="tblReport">
+                    <!-- guard content here -->
+
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-alert-success #alertSuccess [content]="alertSuccessContent">
+
+</app-alert-success>
+
+<app-alert-error #alertError [content]="alertErrorContent">
+
+</app-alert-error>

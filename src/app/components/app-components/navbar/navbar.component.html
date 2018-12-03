@@ -1,0 +1,87 @@
+<mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark pink scrolling-navbar ie-nav bg-main-color" [containerInside]="false">
+  <mdb-navbar-brand>
+    <a routerLink="/" class="">
+      <i class="fa fa-shield icon-custom logo" style="color: whitesmoke"></i>
+    </a>
+  </mdb-navbar-brand>
+  <links>
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link waves-light" routerLink="/">
+          <i class="fa fa-home icon-navbar"></i>
+          <span class="trn">Main View</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link waves-light" routerLink="/tour">
+          <i class="fa fa-street-view icon-navbar"></i>
+          <span class="trn">Live Tour</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link waves-light" routerLink="/incident">
+          <i class="fa fa-exclamation-triangle icon-navbar"></i>
+          <span class="trn">Live Incident</span>
+        </a>
+      </li>
+      <li class="nav-item waves-light">
+        <a class="nav-link" routerLink="/asset">
+          <i class="fa fa-briefcase icon-navbar"></i>
+          <span class="trn">Live Attendance</span>
+        </a>
+      </li>
+      <li class="nav-item dropdown" dropdown>
+        <a dropdownToggle class="nav-link dropdown-toggle">
+          <i class="fa fa-area-chart icon-navbar"></i>
+          <span class="trn">Reports</span>
+        </a>
+        <div *dropdownMenu class="dropdown-menu dropdown" role="menu">
+          <div class="dropdown-submenu">
+            <a class="dropdown-item dropdown-toggle" href="#" id="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="trn">Patrolling Results</span>
+            </a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item waves-light trn" routerLink="/report">Daily Report</a>
+              <a class="dropdown-item waves-light trn" routerLink="/report">Partrolling & Incident Report</a>
+              <a class="dropdown-item waves-light trn" routerLink="/report">Weekly, Monthly, Yearly Report</a>
+              <a class="dropdown-item waves-light trn" routerLink="/report">Patrolling history</a>
+              <a class="dropdown-item waves-light trn" routerLink="/report">Daily Report</a>
+            </div>
+          </div>
+          
+          <a class="dropdown-item waves-light trn" routerLink="/report">Reports</a>
+          <a routerLink="/report-tour" class="dropdown-item trn">Daily Patrolling Results</a>
+          <a class="dropdown-item waves-light trn" routerLink="/violation-report">Violation Reports</a>
+          <a class="dropdown-item waves-light trn" routerLink="/security">Security</a>
+          <a class="dropdown-item waves-light trn" routerLink="/weekly-patrolling-report">Weekly (Monthly) Patrolling Reports</a>
+          <a class="dropdown-item waves-light trn" routerLink="/report-attendance">Report Attendance</a>
+        </div>
+      </li>
+      <li class="nav-item dropdown" dropdown>
+        <a dropdownToggle class="nav-link dropdown-toggle btn-group">
+          <i class="fa fa-cog icon-navbar"></i>
+          <span class="trn">Settings</span>
+        </a>
+        <div *dropdownMenu class="dropdown-menu dropdown" role="menu">
+          <a class="dropdown-item waves-light trn" routerLink="/point">Create Check Points</a>
+          <a class="dropdown-item waves-light trn" routerLink="/group">Create Group-guard</a>
+          <a class="dropdown-item waves-light trn" routerLink="/guard">Security Guard Profile</a>
+          <a class="dropdown-item waves-light trn" routerLink="/zone">Create Zone</a>
+          <a class="dropdown-item waves-light trn" routerLink="/route">Create Route</a>
+          <a class="dropdown-item waves-light trn" routerLink="/schedule">Create Schedule</a>
+          <a class="dropdown-item waves-light trn" routerLink="/define-asset">Create Asset</a>
+          <a class="dropdown-item waves-light trn" routerLink="/device">Create Device</a>
+          <a class="dropdown-item waves-light trn" routerLink="/define-incident">Define Incidents</a>
+        </div>
+      </li>
+    </ul>
+    <ul class="navbar-nav nav-flex-icons">
+      <li class="nav-item">
+        <button class="btn custom-btn bg-main-color btn-block trn" id="changeLanguage">English</button>
+      </li>
+    </ul>
+  </links>
+</mdb-navbar>
+
+
+

@@ -1,0 +1,31 @@
+<select *ngIf="type == 1" [ngClass]="{ 'form-control': true, 'form-control-sm': formControlSm }" (change)="change($event)" [(ngModel)]="currentVal">
+  <option *ngIf="all" value="0">All</option>
+  <option *ngFor="let w of arrWeeks" value="{{ w }}">{{ w }}</option>
+</select>
+
+<div *ngIf="type == 2" class="input-group">
+  <select [ngClass]="{ 'form-control': true, 'form-control-sm': formControlSm }" (change)="change($event)" [(ngModel)]="currentVal">
+    <option *ngIf="all" value="0">All</option>
+    <option *ngFor="let w of arrWeeks" value="{{ w }}">{{ w }}</option>
+  </select>
+  <div class="input-group-append">
+    <button class="btn btn-custom bg-main-color trn" style="margin-top: 0px" (click)="click()">View</button>
+  </div>
+</div>
+
+<div class="input-group" *ngIf="type == 3">
+  <select [ngClass]="{ 'form-control': true, 'form-control-sm': formControlSm }" (change)="change($event)" [(ngModel)]="currentVal">
+    <option *ngIf="all" value="0">All</option>
+    <option *ngFor="let w of arrWeeks" value="{{ w }}">{{ w }}</option>
+  </select>
+  <div class="input-group-append">
+    <div class="btn-group" mdbDropdown>
+        <button mdbDropdownToggle type="button" class="btn btn-custom bg-main-color btn-custom-small dropdown-toggle" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">Action</button>
+        <div class="dropdown-menu" style="padding-right: 10px">
+          <button class="btn btn-custom btn-info btn-custom-small dropdown-item trn" id="btnViewIncidentsReportByMonth" (click)="clickView()">View</button>
+          <button class="btn btn-custom btn-success btn-custom-small dropdown-item trn" (click)="clickChart()">Chart</button>
+        </div>
+    </div>
+  </div>
+</div>

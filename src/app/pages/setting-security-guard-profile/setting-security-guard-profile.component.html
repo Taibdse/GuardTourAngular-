@@ -1,0 +1,268 @@
+<div class="container-fluid">
+
+    <div class="row my-3 row-custom">
+      <!-- guard action card start -->
+      <div class="col-lg-3">
+        <!-- card filter start -->
+        <div class="card card-action">
+          <div class="card-header bg-main-color custom-card-header">
+            <h4>
+              <i class="fa fa-filter"></i> <span class="trn">Search</span>
+            </h4>
+          </div>
+          <div class="card-body custom-card-body">
+            <div class="row mt-3">
+              <div class="col-12">
+                <div class="form-group">
+                  <label for="" class="font-weight-bold trn">by Group</label>
+                  <app-select-group-list #selectGroup [type]="1" [all]="true" (changeEvent)="showGuards()">
+
+                  </app-select-group-list>
+                </div> 
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-12">
+                <button class="btn btn-custom bg-main-color pull-right trn" (click)="showInsertModal()">Insert</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- guard action card end -->
+      </div>
+
+      <div class="col-lg-9">
+        <!-- card Points start -->
+        <div class="card card-guard">
+          <div class="card-header bg-main-color custom-card-header">
+            <h4>
+              <i class="fa fa-exclamation-triangle"></i> <span class="trn">Guard list</span>
+            </h4>
+          </div>
+          <div class="card-body custom-card-body">
+            <div class="row my-3">
+              <div class="col-sm-8">
+                <div>
+                  <pagination-controls (pageChange)="currentPage = $event">
+
+                  </pagination-controls>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div id="totalGuards">
+                  <strong>Total Guards: </strong>
+                  <span>{{ arrGuardList?.length }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover table-striped table-condensed text-center custom-table min-height-table" id="tblGuards">
+                    <thead class="custom-table-header">
+                        <tr>
+                          <th class="trn">#</th>
+                          <th class="trn">ID.</th>
+                          <th class="trn">Full name</th>
+                          <th class="trn">Phone number</th>
+                          <th class="trn">User name</th>
+                          <th class="trn">Group</th>
+                          <th class="trn">Position</th>
+                          <th class="trn">Active</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let guard of arrGuardList | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
+                            <td>{{ i + 1 }}</td>
+                            <td>{{ guard.iGuardID }}</td>
+                            <td>{{ guard.sGuardName }}</td>
+                            <td>{{ guard.sGuardPhone }}</td>
+                            <td>{{ guard.sGuardUserName }}</td> 
+                            <td>{{ guard.sGroupName }}</td>
+                            <td>{{ guard.sPosition }}</td> 
+                            <td>{{ guard.bActive }}</td>
+                            <td>
+                              <div class="btn-group" mdbDropdown>
+                                <button mdbDropdownToggle type="button" class="btn btn-custom bg-main-color btn-custom-small dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                <span class="trn">Action</span>
+                              </button>
+                                <div class="dropdown-menu" >
+                                  <button class="btn btn-custom bg-danger btn-custom-small dropdown-item trn" (click)="showConfirmDelete(guard)">Lock</button>
+                                  <button class="btn btn-custom btn-info btn-custom-small dropdown-item trn" (click)="showUpdateModal(guard)" >Update</button>
+                                  <button class="btn btn-custom btn-warning btn-custom-small dropdown-item trn" (click)="showModalResetPass(guard)">Reset Password</button>
+                                  <button class="btn btn-custom btn-primary btn-custom-small dropdown-item trn" (click)="showSMSModal(guard)">Send Message</button>
+                                  <button class="btn btn-custom btn-success btn-custom-small dropdown-item trn" (click)="showModalGuardCurrentPos(guard)">View map</button>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                    </tbody>
+                </table>
+            </div>
+          </div>
+        </div>
+        <!-- card Points end -->
+      </div>
+    </div>
+  </div>
+
+<div mdbModal #modalInsert="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+    aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalInsert.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h5 class="modal-title w-100">Insert Guard</h5>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="" class="trn">Name</label>
+          <input type="text" class="form-control" placeholder="Enter name..." [(ngModel)]="currentGuard.sGuardName">
+        </div>
+        <div class="form-group">
+          <label for="" class="trn">Phone</label>
+          <input type="text" class="form-control" placeholder="Enter phone..." [(ngModel)]="currentGuard.sGuardPhone">
+        </div>
+        <div class="form-group">
+          <label for="" class="trn">Username</label>
+          <input type="text" class="form-control" placeholder="Enter username..." [(ngModel)]="currentGuard.sGuardUserName">
+        </div>
+        <div class="form-group">
+          <label for="" class="trn">Password</label>
+          <input type="password" class="form-control" placeholder="Enter password..." [(ngModel)]="currentGuard.sGuardPassword">
+        </div>
+        <div class="form-group">
+          <label for="" class="trn">Group</label>
+          <app-select-group-list #selectGroupInsert [type]="1" [all]="false">
+
+          </app-select-group-list>
+        </div>
+
+        <button class="btn btn-success btn-custom pull-right trn" (click)="insertGuard()" >Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mdbModal #modalUpdate="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalUpdate.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h5 class="modal-title w-100">Update Guard</h5>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="" class="trn">ID</label>
+          <input type="text" class="form-control" [(ngModel)]="currentGuard.iGuardID" disabled>
+        </div>
+        <div class="form-group">
+          <label for="" class="trn">Name</label>
+          <input type="text" class="form-control" placeholder="Enter name..." [(ngModel)]="currentGuard.sGuardName">
+        </div>
+        <div class="form-group">
+          <label for="" class="trn">Phone</label>
+          <input type="text" class="form-control" placeholder="Enter phone..." [(ngModel)]="currentGuard.sGuardPhone">
+        </div>
+        <div class="form-group">
+          <label for="" class="trn">Username</label>
+          <input type="text" class="form-control" placeholder="Enter username..." [(ngModel)]="currentGuard.sGuardUserName">
+        </div>
+        <div class="form-group">
+          <label for="" class="trn">Group</label>
+          <app-select-group-list #selectGroupUpdate [type]="1" [all]="false">
+
+          </app-select-group-list>
+        </div>
+        <button class="btn btn-custom btn-success pull-right trn" type="submit" (click)="updateGuard()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mdbModal #modalSendSMS="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalSendSMS.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h5 class="modal-title w-100">Send Message</h5>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="" class="trn">Guard name</label>
+          <input type="text" disabled class="form-control" [(ngModel)]="currentGuard.sGuardName">
+        </div>
+        <div class="form-group">
+          <label for="" class="trn">Message</label>
+          <textarea [(ngModel)]="currentGuard.sMessageContent" cols="30" rows="10" class="form-control" placeholder="Type Message here ...">
+
+          </textarea>
+        </div>
+        <button class="btn btn-custom btn-success pull-right trn" (click)="sendSMS()" >Send</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mdbModal #modalResetPass="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalResetPass.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h5 class="modal-title w-100">Reset Password</h5>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="">Password</label>
+          <input type="password" class="form-control" placeholder="Password..." [(ngModel)]="currentGuard.pass">
+        </div>
+        <div class="form-group">
+          <label for="">Repassword</label>
+          <input type="password" class="form-control" placeholder="Enter password again..." [(ngModel)]="currentGuard.repass">
+        </div>
+        <button type="button" class="btn btn-custom btn-success pull-right" (click)="resetPassword()">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mdbModal #modalGuardMapCurrentPos="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-super-lg-custom" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalGuardMapCurrentPos.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h5 class="modal-title w-100">Guard's Current Position</h5>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class=col-12>
+            <div class="mymap" #mapCurrentGuardPos></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-alert-success #alertSuccess [content]="alertSuccessContent">
+
+</app-alert-success>
+
+<app-alert-error #alertError [content]="alertErrorContent">
+
+</app-alert-error>
+
+<app-alert-warning #alertWarning [content]="alertWarningContent" (confirmEvent)="deleteGuard()"></app-alert-warning>

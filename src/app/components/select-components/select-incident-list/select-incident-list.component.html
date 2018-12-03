@@ -1,0 +1,14 @@
+<select *ngIf="type == 1" [ngClass]="{ 'form-control': true, 'form-control-sm': formControlSm }" (change)="change($event)" [(ngModel)]="currentVal">
+  <option *ngIf="all" value="0">All</option>
+  <option *ngFor="let incident of arrIncidentList" value="{{ incident.iAlertContentID }}">{{ incident.sAlertContent}}</option>
+</select>
+
+<div *ngIf="type == 2" class="input-group">
+  <select [ngClass]="{ 'form-control': true, 'form-control-sm': formControlSm }" (change)="change($event)" [(ngModel)]="currentVal">
+    <option *ngIf="all" value="0">All</option>
+    <option *ngFor="let incident of arrIncidentList" value="{{ incident.iAlertContentID }}">{{ incident.sAlertContent}}</option>
+  </select>
+  <div class="input-group-append">
+    <button class="btn btn-custom bg-main-color trn" style="margin-top: 0px" (click)="click()">View</button>
+  </div>
+</div>

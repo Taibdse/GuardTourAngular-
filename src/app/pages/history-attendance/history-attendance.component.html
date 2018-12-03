@@ -1,0 +1,133 @@
+<div class="container-fluid">
+
+  <div class="row mt-3">
+    <div class="col-lg-3">
+      <div class="card card filter">
+        <div class="card-header bg-main-color custom-card-header">
+          <h4>
+            <i class="fa fa-filter"></i> <span class="trn">Filters</span>
+          </h4>
+        </div>
+        <div class="card-body custom-card-body">
+          <div class="row mt-3">
+            <div class="col-12">
+              <label for=""class="trn">Date</label>
+              <br>
+              <angular2-date-picker [(ngModel)]="currentDate" [settings]="dateTimePickerSettings">
+
+              </angular2-date-picker>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-12">
+              <button class="btn btn-custom bg-main-color pull-right trn" (click)="showAttendanceData()">View</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-9">
+      <div class="card card-reportAttendance">
+        <!-- card header -->
+        <div class="card-header bg-main-color custom-card-header">
+          <h5 class="trn">Report Attendance</h5>
+        </div>
+        <div class="card-body custom-card-body">
+          <div class="row my-3">
+            <div class="col-sm-8">
+              <div>
+                <pagination-controls (pageChange)="currentPage = $event">
+
+                </pagination-controls>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div id="totalReportAttendance">
+                <strong>Total rows: </strong>
+                <span>{{ arrAttendanceData?.length }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-1">
+            <div class="table-responsive">
+              <table class="table table-hover table-striped table-condensed text-center custom-table" id="tblReportAttendance">
+                <thead class="custom-table-header">
+                  <tr>
+                    <th class="trn">Name of Guard</th>
+                    <th class="trn">Date</th>
+                    <th class="trn">Request time</th>
+                    <th class="trn">Response time</th>
+                    <th class="trn">Delay</th>
+                    <th class="trn">Image</th>
+                    <th class="trn">Map</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of arrAttendanceData | paginate: { itemsPerPage: 10, currentPage: currentPage }">
+                    <td>{{ item.sGuardName }}</td>
+                    <td>{{ item.dDate }}</td>
+                    <td>{{ item.dDateTimeCheck }}</td>
+                    <td>{{ item.dDateTimeRespone }}</td>
+                    <td>{{ item.iDelay }}</td>
+                    <td>
+                      <img [src]="showImage(item.sImageUrl)" alt="Image here" class="img-report-att" style="width:80px; height: 120px" (click)="showModalImage(item)">
+                    </td>
+                    <td>
+                      <button class="btn btn-custom bg-main-color btnShowAttendanceMap btn-custom-small" (click)="showMap(item)">Map</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- currentImageModal -->
+<div mdbModal #modalImage="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog small-dialog-modal" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalImage.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h6 class="modal-title w-100" id="myModalLabel">Image Report Attendance</h6>
+      </div>
+      <div class="modal-body">
+        <img [src]="currentImageModal" alt="" class="img-fluid img-thumbnail" style="margin: auto; width: 100%;">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mdbModal #modalMap="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-super-lg-custom" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalMap.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h6 class="modal-title w-100" id="myModalLabel">Map Attendance</h6>
+      </div>
+      <div class="modal-body">
+        <div class="mymap" #mapArea></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-alert-success #alertSuccess [content]="alertSuccessContent">
+
+</app-alert-success>
+
+<app-alert-error #alertError [content]="alertErrorContent">
+
+</app-alert-error>
+
+<app-alert-warning #alertWarning [content]="alertWarningContent" [type]="1">
+
+</app-alert-warning>

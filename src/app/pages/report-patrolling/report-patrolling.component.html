@@ -1,0 +1,134 @@
+<div class="container-fluid">
+
+  <div class="row my-3 row-custom">
+    <!-- guard action card start -->
+    <div class="col-lg-2 mb-4">
+      <!-- card filter start -->
+      <div class="card card-action">
+        <div class="card-header bg-main-color custom-card-header">
+          <h4>
+            <i class="fa fa-filter"></i> <span class="trn">Search</span>
+          </h4>
+        </div>
+        <div class="card-body custom-card-body">
+          <div class="row mt-3">
+            <div class="col-12">
+              <label for="" class="trn">by Route</label>
+              <app-select-route-list #selectRoute [type]="1" [all]="false">
+
+              </app-select-route-list>
+            </div>
+          </div>  
+          <div class="row my-4">
+              <div class="col-12">
+                <label for="" class="trn">by Week</label>
+                <app-select-week #selectWeek [type]="2" [all]="false" (clickEvent)="showData('week')">
+
+                </app-select-week>
+            </div>
+          </div>
+          <div class="row my-4">
+            <div class="col-12">
+              <label for="" class="trn">by Month</label>
+              <app-select-month #selectMonth [type]="2" [all]="false" (clickEvent)="showData('month')">
+
+              </app-select-month>
+            </div>
+          </div>
+          <div class="row my-4">
+              <div class="col-12">
+                <label for="" class="trn">by Year</label>
+                <app-select-year #selectYear [type]="2" [all]="false" (clickEvent)="showData('year')">
+
+                </app-select-year>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- guard action card end -->
+    </div>
+    <div class="col-10">
+        <!-- card violationMin start -->
+        <div class="card card-securityReport">
+          <div class="card-header bg-main-color custom-card-header">
+            <h4>
+              <i class="fa fa-exclamation-triangle"></i> <span class="trn">Security Report</span>
+            </h4>
+          </div>
+          <div class="card-body custom-card-body">
+            <div class="row my-2">
+              <div class="col-12">
+                <h5 class="text-center trn">Security Patrolling Performance</h5>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6" #chartPatrollingArea></div>
+              <div class="col-md-6" #chartTimeArea></div>
+            </div>
+            <div class="table-responsive mt-5">
+              <table class="table table-hover table-striped table-condensed custom-table" id="tblReportSecurity">
+                <thead class="custom-table-header">
+                  <tr>
+                    <th class="trn">Reporting Week</th>
+                    <th class="trn" *ngFor="let header of arrHeaders">{{ header }}</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of arrRows">
+                    <td class="trn" *ngFor="let item of row">{{ item }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!-- card violationMin end -->
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <!-- Modal -->
+      <div class="modal fade" id="modalSecurityReportChart" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-custom" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title trn" id="">Security Report Chart</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-12">
+                  <div class="text-center font-weight-bold green-text headerChartReportSecurity" style="font-size: 1.1em"></div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 chartWeeklyPatrollingPerformance">
+                  
+                </div>
+                <div class="col-md-6 chartWorkingTimeVsIdlingTime">
+                 
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-custom bg-main-color trn" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+<app-alert-success #alertSuccess [content]="alertSuccessContent">
+
+</app-alert-success>
+
+<app-alert-error #alertError [content]="alertErrorContent">
+
+</app-alert-error>

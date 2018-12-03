@@ -1,0 +1,193 @@
+<div class="container-fluid">
+  <div class="row my-3 row-custom">
+    <!-- filter and incident card -->
+    <div class="col-12">
+      <!-- card filter start -->
+      <div class="card card filter">
+        <div class="card-header bg-main-color custom-card-header">
+          <h4>
+            <i class="fa fa-filter"></i>
+            <span class="trn" style="margin-left: 10px">Filters</span>
+          </h4>
+        </div>
+        <div class="card-body custom-card-body">
+          <div class="row">
+            <div class="col-md-4">
+              <label for="" class="trn">by Guard</label>
+              <app-select-guard-list #selectGuardList [type]="2" [all]="false" [formControlSm]="true" (clickEvent)="showLiveTourData($event, 'guard')">
+
+              </app-select-guard-list>
+            </div>
+            <div class="col-md-4">
+              <label for="" class="trn">by Route</label>
+              <app-select-route-list #selectRouteList [type]="2" [all]="false" [formControlSm]="true" (clickEvent)="showLiveTourData($event, 'guard')">
+
+              </app-select-route-list>
+            </div>
+            <div class="col-md-4">
+              <label for="" class="trn">by Device</label>
+              <app-select-device-list #selectDeviceList [type]="2" [all]="false" [formControlSm]="true" (clickEvent)="showLiveTourData($event, 'guard')">
+
+              </app-select-device-list>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- card filter end -->
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="card card-tour">
+        <div class="card-header bg-main-color custom-card-header">
+          <h4>
+            <i class="fa fa-exclamation-triangle"></i>
+            <span class="trn" style="margin-left: 10px">Live Tour</span>
+          </h4>
+        </div>
+        <div class="card-body custom-card-body">
+          <div class="row">
+            <div class="col-12">
+              <div class="headerTblTours text-center font-weight-bold green-text" style="font-size: 1.2em"></div>
+            </div>
+          </div>
+          <div class="row my-3">
+            <div class="col-sm-8">
+              <div>
+                <pagination-controls (pageChange)="currentPage = $event">
+
+                </pagination-controls>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div id="totalTours">
+
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover table-striped table-condensed text-center custom-table">
+              <thead class="custom-table-header">
+                <tr>
+                  <th class="trn">#</th>
+                  <th class="trn">Zone</th>
+                  <th class="trn">Route</th>
+                  <th class="trn">Name of Guard</th>
+                  <th class="trn">Device</th>
+                  <th class="trn">Tour No</th>
+                  <th class="trn">Start</th>
+                  <th class="trn">Finish</th>
+                  <th class="trn">Timing (min)</th>
+                  <th class="trn ">Missed CheckPoint Name</th>
+                  <th class="trn">Distance (km)</th>
+                  <th class="trn"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let tour of arrTourList | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
+                  <th class="trn">{{ i + 1 }}</th>
+                  <th class="trn">{{ tour.sZoneName }}</th>
+                  <th class="trn">{{ tour.sRouteName }}</th>
+                  <th class="trn">{{ tour.sGuardName }}</th>
+                  <th class="trn">{{ tour.sDeviceName }}</th>
+                  <th class="trn">{{ tour.iNoTour }}</th>
+                  <th class="trn">{{ tour.dDateTimeStart }}</th>
+                  <th class="trn">{{ tour.dDateTimeEnd }}</th>
+                  <th class="trn">{{ tour.iTimeComplete }}</th>
+                  <th class="trn text-left" [innerHTML]="tour.MissedCheckPointName"></th>
+                  <th class="trn">{{ tour.dDistance }}</th>
+                  <th class="trn">
+                    <div class="btn-group" mdbDropdown>
+                      <button mdbDropdownToggle type="button" class="btn btn-custom bg-main-color btn-custom-small dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <span class="trn">Action</span>
+                      </button>
+                      <div class="dropdown-menu">
+                        <button class="btn btn-custom btn-success btn-custom-small dropdown-item trn" style=" margin-top:-5px" (click)="showEventDetailsMap(tour.sCheckingCode)">Map</button>
+                        <button class="btn btn-custom btn-info btn-custom-small dropdown-item trn" style=" margin-top:-5px; margin-left: 5px" (click)="showEventHistoryDetails(tour.sCheckingCode)">Details</button>
+                      </div>
+                    </div>
+                  </th>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mdbModal #modalTourDetails="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalTourDetails.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title w-100" id="myModalLabel">Tour Details</h4>
+      </div>
+      <div class="modal-body">
+        <table class="table table-hover table-striped table-condensed text-center custom-table">
+          <thead class="custom-table-header">
+            <tr>
+              <th class="trn">Name</th>
+              <th class="trn">Point ID</th>
+              <th class="trn">Status</th>
+              <th class="trn">Datetime</th>
+              <th class="trn">KindCheck</th>
+              <th class="trn">#</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let detail of arrTourDetailsList">
+              <td>{{ detail.sGuardName }}</td>
+              <td>{{ detail.iPointID }}</td>
+              <td>{{ detail.sStatus }}</td>
+              <td>{{ detail.dDateTimeHistory }}</td>
+              <td>{{ detail.KindCheck }}</td>
+              <td>{{ detail.iNo }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" mdbBtn color="secondary" class="waves-light btn btn-custom bg-main-color trn" aria-label="Close" (click)="modalTourDetails.hide()"
+          mdbWavesEffect>Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mdbModal #modalMap="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-custom" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalMap.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title w-100" id="myModalLabel">Tour Map</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class=col-12>
+            <div class="mymap" #mapTour></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" mdbBtn color="secondary" class="waves-light btn btn-custom bg-main-color trn" aria-label="Close" (click)="modalMap.hide()"
+          mdbWavesEffect>Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-alert-success #alertSuccess [content]="alertSuccessContent">
+
+</app-alert-success>
+
+<app-alert-error #alertError [content]="alertErrorContent">
+
+</app-alert-error>

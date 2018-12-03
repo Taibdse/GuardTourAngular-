@@ -1,0 +1,227 @@
+<div class="container-fluid">
+
+  <div class="row my-3 row-custom">
+    <!-- filter and incident card -->
+    <div class="col-lg-3">
+      <!-- card filter start -->
+      <div class="card card filter">
+        <div class="card-header bg-main-color custom-card-header">
+          <h4>
+            <i class="fa fa-filter"></i>
+            <span class="trn">Filters</span>
+          </h4>
+        </div>
+        <div class="card-body custom-card-body">
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <label for="">Zone</label>
+                <app-select-zone-list #selectZone [all]="true" [type]="1" (changeEvent)="showAssets()">
+
+                </app-select-zone-list>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-12">
+              <button class="btn btn-custom bg-main-color pull-right trn" id="btnShowInsertAssetModal" (click)="showModalInsert()">Insert</button>
+              <!-- <button class="btn btn-custom bg-main-color pull-right trn" id="btnViewAssetList" (click)="showAssets()">View</button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- card filter end -->
+    </div>
+
+    <div class="col-lg-9">
+      <!-- card asset start -->
+      <div class="card card-assets">
+        <div class="card-header bg-main-color custom-card-header">
+          <h4>
+            <i class="fa fa-exclamation-triangle"></i>
+            <span class="trn">Asset</span>
+          </h4>
+        </div>
+        <div class="card-body custom-card-body">
+          <div class="row my-3">
+            <div class="col-sm-8">
+              <div>
+                <pagination-controls (pageChange)="currentPage = $event">
+
+                </pagination-controls>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div id="totalAssets">
+                <strong>Total Assets: </strong>
+                <span>{{ arrAssets?.length }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover table-striped table-condensed text-center custom-table min-height-table" id="tblAsset">
+              <thead class="custom-table-header">
+                <tr>
+                  <th class="trn">Asset name</th>
+                  <th class="trn">Asset code</th>
+                  <th class="trn">Zone</th>
+                  <th class="trn">Route</th>
+                  <th class="trn">Lat</th>
+                  <th class="trn">Long</th>
+                  <th class="trn"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let asset of arrAssets | paginate: { itemsPerPage: 10, currentPage: currentPage }">
+                  <td>{{ asset.sAssetName }}</td>
+                  <td>{{ asset.sAssetCode }}</td>
+                  <td>{{ asset.sZoneName }}</td>
+                  <td>{{ asset.sRouteName }}</td>
+                  <td>{{ asset.dPropertyLat }}</td>
+                  <td>{{ asset.dPropertyLong }}</td>
+                  <td>
+                    <div class="btn-group" mdbDropdown>
+                      <button mdbDropdownToggle type="button" class="btn btn-custom bg-main-color btn-custom-small dropdown-toggle"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="trn">Action</span>
+                      </button>
+                      <div class="dropdown-menu">
+                        <button class="btn btn-custom bg-info btn-custom-small dropdown-item btnShowUpdateAssetModal trn"
+                          (click)="showModalUpdate(asset)">Update</button>
+                        <button class="btn btn-custom bg-danger btn-custom-small dropdown-item btnDeleteAsset trn" (click)="showConfirmDelete(asset)">Delete</button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- card asset end -->
+    </div>
+  </div>
+  
+</div>
+
+<div mdbModal #modalInsert="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-super-lg-custom" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close pull-right" aria-label="Close" (click)="modalInsert.hide()">
+            <span aria-hidden="true">×</span>
+          </button>
+          <h5 class="modal-title w-100">Insert Asset</h5>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-lg-8">
+              <div class="mymap" #mapInsert></div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="" class="font-weight-bold">Asset Name</label>
+                <input type="text" class="form-control" placeholder="Asset name" [(ngModel)]="currentAsset.sAssetName">
+              </div>
+              <div class="form-group">
+                <label for="" class="font-weight-bold">Asset Code</label>
+                <input type="text" class="form-control" placeholder="Asset code" [(ngModel)]="currentAsset.sAssetCode">
+              </div>
+              <div class="form-group">
+                <label for="" class="font-weight-bold">Zone</label>
+                <app-select-zone-list #selectZoneInsert [all]="false" [type]="1">
+
+                </app-select-zone-list>
+              </div>
+              <div class="form-group">
+                <label for="" class="font-weight-bold">Route</label>
+                <app-select-route-list #selectRouteInsert [all]="false" [type]="1">
+
+                </app-select-route-list>
+              </div>
+              <div>
+                <label for="" class="font-weight-bold">Lat: </label>
+                <span>{{ currentAsset?.dPropertyLat }}</span>
+              </div>
+              <div>
+                <label for="" class="font-weight-bold">Long: </label>
+                <span>{{ currentAsset?.dPropertyLong }}</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-custom btn-success pull-right" (click)="insertAsset()">Save</button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" mdbBtn color="secondary" class="waves-light btn btn-custom bg-main-color trn"
+            aria-label="Close" (click)="modalInsert.hide()" mdbWavesEffect>Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div mdbModal #modalUpdate="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-super-lg-custom" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close pull-right" aria-label="Close" (click)="modalUpdate.hide()">
+            <span aria-hidden="true">×</span>
+          </button>
+          <h5 class="modal-title w-100">Update Asset</h5>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-lg-8">
+              <div class="mymap" #mapUpdate></div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="" class="font-weight-bold">Asset Name</label>
+                <input type="text" class="form-control" placeholder="Asset name" [(ngModel)]="currentAsset.sAssetName">
+              </div>
+              <div class="form-group">
+                <label for="" class="font-weight-bold">Asset Code</label>
+                <input type="text" class="form-control" placeholder="Asset code" [(ngModel)]="currentAsset.sAssetCode">
+              </div>
+              <div class="form-group">
+                <label for="" class="font-weight-bold">Zone</label>
+                <app-select-zone-list #selectZoneUpdate [all]="false" [type]="1">
+
+                </app-select-zone-list>
+              </div>
+              <div class="form-group">
+                <label for="" class="font-weight-bold">Route</label>
+                <app-select-route-list #selectRouteUpdate [all]="false" [type]="1">
+
+                </app-select-route-list>
+              </div>
+              <div>
+                <label for="" class="font-weight-bold">Lat: </label>
+                <span>{{ currentAsset?.dPropertyLat }}</span>
+              </div>
+              <div>
+                <label for="" class="font-weight-bold">Long: </label>
+                <span>{{ currentAsset?.dPropertyLong }}</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-custom btn-success pull-right" (click)="updateAsset()">Save</button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" mdbBtn color="secondary" class="waves-light btn btn-custom bg-main-color trn"
+            aria-label="Close" (click)="modalInsert.hide()" mdbWavesEffect>Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<app-alert-success #alertSuccess [content]="alertSuccessContent">
+
+</app-alert-success>
+
+<app-alert-error #alertError [content]="alertErrorContent">
+
+</app-alert-error>
+
+<app-alert-warning #alertWarning [content]="alertWarningContent" (confirmEvent)="deleteAsset()"></app-alert-warning>

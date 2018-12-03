@@ -1,0 +1,125 @@
+<div class="container-fluid">
+
+  <div class="row my-3 row-custom">
+    <!-- filter and incident card -->
+    <div class="col-lg-3">
+      <!-- card filter start -->
+      <div class="card card filter">
+        <div class="card-header bg-main-color custom-card-header">
+          <h4>
+            <i class="fa fa-filter"></i> <span class="trn">Filters</span>
+          </h4>
+        </div>
+        <div class="card-body custom-card-body">
+          <div class="row mt-3">
+            <div class="col-12">
+              <button class="btn btn-custom bg-main-color pull-right trn" (click)="showModalInsertDevice()">Insert</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- card filter end -->
+    </div>
+
+    <div class="col-lg-9">
+
+      <!-- card incident start -->
+      <div class="card card-device">
+        <div class="card-header bg-main-color custom-card-header">
+          <h4>
+            <i class="fa fa-exclamation-triangle"></i> <span class="trn">Devices</span></h4>
+        </div>
+        <div class="card-body custom-card-body">
+          <div class="row my-3">
+            <div class="col-sm-8">
+              <div>
+                <pagination-controls (pageChange)="currentPage = $event">
+
+                </pagination-controls>
+              </div>
+            </div> 
+            <div class="col-sm-4">
+              <div id="totalDevices">
+                <strong>Total devices: </strong>
+                <span> {{ arrDevices?.length }} </span>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover table-striped table-condensed text-center custom-table min-height-table" id="tblDevice">
+              <thead class="custom-table-header">
+                <tr>
+                  <th class="trn">No.</th>
+                  <th class="trn">Name</th>
+                  <th class="trn">Serial</th>
+                  <th class="trn">Status</th>
+                  <th class="trn">Power</th>
+                  <th class="trn">Datetime updated</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let device of arrDevices | paginate: { itemsPerPage: 10, currentPage: currentPage }">
+                  <td>{{ device.iDeviceID }}</td>
+                  <td>{{ device.sDeviceName }}</td>
+                  <td>{{ device.sDeviceSerial }}</td>
+                  <td>{{ device.bStatus }}</td>
+                  <td>{{ device.dPower }}</td>
+                  <td>{{ device.dDateTimeUpdated }}</td>
+                  <td>
+                    <div class="btn-group" mdbDropdown>
+                      <button mdbDropdownToggle type="button" class="btn btn-custom bg-main-color btn-custom-small dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <span class="trn">Action</span>
+                      </button>
+                      <div class="dropdown-menu">
+                        <button class="btn btn-custom bg-info btn-custom-small dropdown-item btnShowDetailDevice trn">Details</button>
+                        <button class="btn btn-custom bg-danger btn-custom-small dropdown-item btnLockDevice trn" (click)="showConfirmDelete(device)">Lock</button>
+                      </div>
+                    </div>
+                   
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- card incident end -->
+    </div>
+  </div>
+
+<!-- Insert Device -->
+<div mdbModal #modalInsert="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalInsert.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h6 class="modal-title w-100" id="myModalLabel">Insert Device</h6>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="" class="trn">Device Name</label>
+          <input type="text" placeholder="Enter Name" [(ngModel)]="currentDevice.sDeviceName" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="" class="trn">Device Serial</label>
+          <input type="text" placeholder="Enter Serial" [(ngModel)]="currentDevice.sDeviceSerial" class="form-control">
+        </div>
+        <button class="btn btn-success btn-custom pull-right trn" (click)="insertDevice()">Insert</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-alert-success #alertSuccess [content]="alertSuccessContent">
+
+</app-alert-success>
+
+<app-alert-error #alertError [content]="alertErrorContent">
+
+</app-alert-error>
+
+<app-alert-warning #alertWarning [content]="alertWarningContent" (confirmEvent)="deleteDevice()"></app-alert-warning>

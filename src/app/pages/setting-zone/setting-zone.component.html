@@ -1,0 +1,150 @@
+<div class="container-fluid">
+
+  <div class="row row-custom">
+    <!-- filter and incident card -->
+    <div class="col-lg-3 mt-3">
+      <div class="card card filter">
+        <div class="card-header bg-main-color custom-card-header">
+          <h4>
+            <i class="fa fa-filter"></i> <span class="trn">Filters</span>
+          </h4>
+        </div>
+        <div class="card-body custom-card-body">
+         
+          <div class="row mt-3">
+            <div class="col-12">
+              <button class="btn btn-custom bg-main-color pull-right trn" type="button" (click)="showInsertModal()">Insert</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-9 mt-3">
+      <!-- card Points start -->
+      <div class="card card-zone">
+        <div class="card-header bg-main-color custom-card-header">
+          <h4>
+            <i class="fa fa-exclamation-triangle"></i> <span class="trn">Zones</span>
+          </h4>
+        </div>
+        <div class="card-body custom-card-body">
+          <div class="row my-3">
+            <div class="col-sm-8">
+              <div>
+                <pagination-controls (pageChange)="currentPage = $event">
+
+                </pagination-controls>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div id="totalZones">
+                <strong>Total Zones: </strong>
+                <span>{{ arrZoneList?.length }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover table-striped table-condensed text-center custom-table" id="tblZones">
+              <thead class="custom-table-header">
+                <tr>
+                  <th class="trn">#</th>
+                  <th class="trn">ID</th>
+                  <th class="trn">Name</th>
+                  <th class="trn">Address</th>
+                  <th class="trn"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let zone of arrZoneList | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ zone.iZoneID }}</td>
+                  <td>{{ zone.sZoneName }}</td>
+                  <td>{{ zone.sZoneAddress }}</td>
+                  <td>
+                    <button class="btn btn-custom btn-info btnShowUpdateZoneModal btn-custom-small trn" (click)="showUpdateModal(zone)">Update</button>
+                    <button class="btn btn-custom btn-danger btnInactiveZone btn-custom-small trn" (click)="showConfirmDeleteZone(zone)">Lock</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- card Points end -->
+    </div>
+  </div>
+  
+</div>
+
+<div mdbModal #modalInsert="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+    aria-hidden="true">
+  <div class="modal-dialog modal-dialog-super-lg-custom" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalInsert.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h5 class="modal-title w-100">Insert Zone</h5>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-9">
+           <div class="mymap" #mapInsert></div> 
+          </div>
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="" class="trn">Zone name</label>
+              <input type="text" placeholder="Enter zone name" class="form-control" [(ngModel)]="currentZone.sZoneName">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-custom bg-main-color trn" id="btnClearZoneMap" (click)="clearZone()">Clear zone</button>
+        <button class="btn btn-custom bg-main-color trn" id="btnInsertZone" (click)="insertZone()">Save</button>
+        <button type="button" mdbBtn color="secondary" class="waves-light btn btn-custom bg-main-color trn"
+          aria-label="Close" (click)="modalInsert.hide()" mdbWavesEffect>Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mdbModal #modalUpdate="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalUpdate.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h5 class="modal-title w-100">Update Zone</h5>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group">
+              <label class="trn">Zone ID</label>
+              <input type="text" class="form-control" disabled [(ngModel)]="currentZone.iZoneID">
+            </div>
+            <div class="form-group">
+              <label class="trn">Zone name</label>
+              <input class="form-control" [(ngModel)]="currentZone.sZoneName">
+            </div>
+            <button class="btn btn-custom btn-success pull-right trn" (click)="updateZone()">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-alert-success #alertSuccess [content]="alertSuccessContent">
+
+</app-alert-success>
+
+<app-alert-error #alertError [content]="alertErrorContent">
+
+</app-alert-error>
+
+<app-alert-warning #alertWarning [content]="alertWarningContent" (confirmEvent)="deleteZone()"></app-alert-warning>

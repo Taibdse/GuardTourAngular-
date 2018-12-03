@@ -1,0 +1,45 @@
+<div mdbModal #modalWarning="mdbModal" class="modal fade top" id="frameModalTop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-notify modal-warning" role="document">
+    <!--Content-->
+    <div class="modal-content">
+      <!--Header-->
+      <div class="modal-header">
+        <p class="heading lead">Warning</p>
+
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modalWarning.hide()">
+          <span aria-hidden="true" class="white-text">&times;</span>
+        </button>
+      </div>
+
+      <!--Body-->
+      <div class="modal-body">
+        <div class="text-center">
+          <i class="fa fa-warning fa-4x mb-3 animated rotateIn"></i>
+          <h4>{{ content }}</h4>
+          <p>{{ detail }}</p>
+        </div>
+      </div>
+
+      <!--Footer-->
+      <div class="modal-footer justify-content-center" *ngIf="type == 1">
+        <a type="button" mdbBtn color="warning" class="waves-effect" (click)="modalWarning.hide()" mdbWavesEffect>Cancel
+          <i class="fa fa-diamond ml-1"></i>
+        </a>
+        <a type="button" mdbBtn color="success" class="waves-effect" (click)="emitConfirmEvent()" mdbWavesEffect>Confirm
+          <i class="fa fa-diamond ml-1"></i>
+        </a>
+      </div>
+
+      <div class="modal-footer justify-content-center" *ngIf="type == 2">
+        <a type="button" mdbBtn color="warning" class="waves-effect" (click)="emitRejectEvent()" mdbWavesEffect>Reject
+          <i class="fa fa-diamond ml-1"></i>
+        </a>
+        <a type="button" mdbBtn color="success" class="waves-effect" (click)="emitAcceptEvent()" mdbWavesEffect>Accecpt
+          <i class="fa fa-diamond ml-1"></i>
+        </a>
+      </div>
+    </div>
+    <!--/.Content-->
+  </div>
+</div>

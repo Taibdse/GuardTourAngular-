@@ -1,0 +1,132 @@
+<div class="container-fluid">
+
+  <div class="row my-3 row-custom">
+    <!-- filter and incident card -->
+    <div class="col-lg-3">
+      <!-- card filter start -->
+      <div class="card card filter">
+        <div class="card-header bg-main-color custom-card-header">
+          <h4>
+            <i class="fa fa-filter"></i> <span class="trn">Search</span>
+          </h4>
+        </div>
+        <div class="card-body custom-card-body">
+          <div class="row mt-3">
+
+          </div>
+          <div class="row mt-3">
+            <div class="col-12">
+              <button class="btn btn-custom bg-main-color pull-right trn" (click)="showModalInsertIncident()">Insert</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- card filter end -->
+    </div>
+
+    <div class="col-lg-9">
+      <!-- card Points start -->
+      <div class="card card-incident-type">
+        <div class="card-header bg-main-color custom-card-header">
+          <h4>
+            <i class="fa fa-exclamation-triangle"></i> <span class="trn">Incident Types</span>
+          </h4>
+        </div>
+        <div class="card-body custom-card-body">
+          <div class="row my-3">
+            <div class="col-sm-8">
+              <div id="pagingIncidentTypesControl">
+                <pagination-controls (pageChange)="currentPage = $event">
+
+                </pagination-controls>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div id="totalIncidentTypes">
+                <strong>Total Inicidents: </strong> 
+                <span>{{ arrIncidents?.length }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover table-striped table-condensed text-center custom-table" id="tblIncidentTypes">
+              <thead class="custom-table-header">
+                <tr>
+                  <th class="trn">#</th>
+                  <th class="trn">Content</th>
+                  <th class="trn"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let incident of arrIncidents | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ incident.sAlertContent }}</td>
+                  <td>
+                    <button class="btn btn-custom btn-info btn-custom-small trn" (click)="showModalUpdateIncident(incident)">Update</button>
+                    <button class="btn btn-custom btn-danger btnDeleteIncident btn-custom-small trn" (click)="showConfirmDeleteIncident(incident)">Delete</button>
+                  </td>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- card Points end -->
+    </div>
+  </div>
+  
+
+  
+<!-- Insert Incident -->
+<div mdbModal #modalInsertIncident="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalInsertIncident.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title w-100" id="myModalLabel">Insert Incident</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="" class="trn">Content</label>
+          <input type="text" placeholder="Incident Content" class="form-control" [(ngModel)]="txtInsertIncidentContent">
+        </div>
+        <button class="btn btn-success btn-custom pull-right trn" (click)="insertIncident()">Insert</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Update Incident  -->
+<div mdbModal #modalUpdateIncident="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalUpdateIncident.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title w-100" id="myModalLabel">Update Incident</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="" class="trn">Content</label>
+          <input type="text" placeholder="Incident Content" class="form-control" [(ngModel)]="currentUpdateInicdent.sAlertContent">
+        </div>
+        <button class="btn btn-success btn-custom pull-right trn" (click)="updateIncident()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <app-alert-success #alertSuccess [content]="alertSuccessContent">
+
+  </app-alert-success>
+  
+  <app-alert-error #alertError [content]="alertErrorContent">
+  
+  </app-alert-error>
+
+  <app-alert-warning #alertWarning [content]="alertWarningContent" (confirmEvent)="deleteIncident()"></app-alert-warning>
+</div>

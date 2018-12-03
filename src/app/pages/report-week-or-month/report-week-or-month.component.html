@@ -1,0 +1,109 @@
+<div class="container-fluid">
+  <div class="row my-3 row-custom">
+    <div class="col-lg-2 mb-4">
+        <!-- card filter start -->
+        <div class="card card filter">
+          <div class="card-header bg-main-color custom-card-header">
+            <h4>
+              <i class="fa fa-filter"></i> <span class="trn">Search</span>
+            </h4>
+          </div>
+          <div class="card-body custom-card-body">
+            <div class="row mt-3">
+              <div class="col-12">
+                <label for="" class="trn">by Route</label><br>
+                <app-select-route-list #selectRoute [type]="1" [all]="true">
+
+                </app-select-route-list>
+              </div>
+            </div>
+            <div class="row my-4">
+                <div class="col-12">
+                  <label for="" class="trn">by Week</label>
+                  <app-select-week #selectWeek [type]="2" [all]="false" (clickEvent)="showData('week')">
+
+                  </app-select-week>
+              </div>
+            </div>
+            <div class="row my-4">
+              <div class="col-12">
+                <label for="" class="trn">by Month</label>
+                <app-select-month #selectMonth [type]="2" [all]="false" (clickEvent)="showData('month')">
+
+                </app-select-month>
+              </div>
+            </div>
+            <div class="row my-4">
+                <div class="col-12">
+                  <label for="" class="trn">by Year</label>
+                  <app-select-year #selectYear [type]="2" [all]="false" (clickEvent)="showData('year')">
+
+                  </app-select-year>
+              </div>
+            </div>
+        </div>
+        </div>
+        
+        <!-- card filter end -->
+    </div>
+    <div class="col-lg-10">
+        <!-- card Points start -->
+        <div class="card card-tourReport">
+          <div class="card-header bg-main-color custom-card-header">
+            <h4>
+              <i class="fa fa-exclamation-triangle"></i> <span class="trn">Report Tours</span>
+            </h4>
+          </div>
+          <div class="card-body custom-card-body">
+            <div class="row my-3">
+              <div class="col-md-6" id="lineChart"></div>
+              <div class="col-md-6" id="barChart"></div>
+            </div>
+            <div class="table-responsive mt-5">
+                <table class="table table-hover table-striped table-condensed text-center custom-table" id="tblReportTour">
+                  <thead class="custom-table-header">
+                    <tr>
+                      <th class="trn">Route</th>
+                      <th class="trn">Date</th>
+                      <th class="trn">Day</th>
+                      <th class="trn">Week</th>
+                      <th class="trn">Month</th>
+                      <th class="trn">Per. routes</th>
+                      <th class="trn">Per. Routing</th>
+                      <th class="trn">Per. Timing</th>
+                      <th class="trn">Per. Time</th>
+                      <th class="trn">Idling Time</th>
+                      <th class="trn">Number issued</th>        
+                    </tr>
+                  </thead>
+                  <tbody *ngFor="let item of arrTourList">
+                    <tr>
+                      <td>{{ item.sRouteName }}</td>
+                      <td>{{ item.dDateReport }}</td>
+                      <td>{{ item.sDayName }}</td>
+                      <td>{{ item.iWeek }}</td>
+                      <td>{{ item.iMonth }}</td>
+                      <td>{{ item.dPerformance_Routes }} %</td>
+                      <td>{{ item.dPerformance_Routing }} %</td>
+                      <td>{{ item.dPerformance_Timing }} %</td>
+                      <td>{{ item.dPerfomance_Time }} %</td>
+                      <td>{{ item.dIdling_Time_in }} %</td>
+                      <td>{{ item.iNumber_of_reports_issued }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+          </div>
+        </div>
+        <!-- card Points end -->
+    </div>
+  </div>
+</div>
+
+<app-alert-success #alertSuccess [content]="alertSuccessContent">
+
+</app-alert-success>
+
+<app-alert-error #alertError [content]="alertErrorContent">
+
+</app-alert-error>

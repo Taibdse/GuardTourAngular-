@@ -1,0 +1,227 @@
+<div class="container-fluid">
+
+  <div class="row my-3 row-custom">
+    <!-- filter and incident card -->
+    <div class="col-12">
+      <!-- card filter start -->
+      <div class="card card filter">
+        <div class="card-header bg-main-color custom-card-header">
+          <h4>
+            <i class="fa fa-filter"></i> <span class="trn">Search</span>
+          </h4>
+        </div>
+        <div class="card-body custom-card-body">
+          <div class="row">
+              <div class="col-md-4">
+                <label for="" class="trn">by Guard</label>
+                <app-select-guard-list #selectGuard [type]="2" [all]="false" (clickEvent)="showTourHistoryData('guard')">
+
+                </app-select-guard-list>
+              </div>
+            <div class="col-md-4">
+              <label for="" class="trn">by Route</label>
+              <app-select-route-list #selectRoute [type]="2" [all]="false" (clickEvent)="showTourHistoryData('route')">
+
+              </app-select-route-list>
+            </div>
+            <div class="col-md-4">
+                <label for="" class="trn">by Device</label>
+                <app-select-device-list #selectDevice [type]="2" [all]="false" (clickEvent)="showTourHistoryData('device')">
+
+                </app-select-device-list>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+                <label for="" class="trn">Started</label>
+                <br>
+                <angular2-date-picker [(ngModel)]="currentFromDate" [settings]="dateTimePickerSettings">
+
+                </angular2-date-picker>
+            </div>
+            <div class="col-md-4">
+                <label for="" class="trn">Finished</label>
+                <br>
+                <angular2-date-picker [(ngModel)]="currentToDate" [settings]="dateTimePickerSettings">
+
+                </angular2-date-picker>
+            </div>
+            <div class="col-md-4">
+             
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- card filter end -->
+    </div>
+
+
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="card card-tour">
+        <div class="card-header bg-main-color custom-card-header">
+          <h4>
+            <i class="fa fa-exclamation-triangle"></i> <span class="trn">Tour lists</span></h4>
+        </div>
+        <div class="card-body custom-card-body">
+          <div class="row">
+            <div class="col-12">
+              <div class="text-center font-weight-bold green-text" style="font-size: 1.2em">{{ currentHeader }}</div>
+            </div>
+          </div>
+          <div class="row my-3">
+            <div class="col-sm-8">
+              <div>
+                <pagination-controls (pageChange)="currentPage = $event">
+
+                </pagination-controls>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div id="totalTours">
+                <strong>Total Tours: </strong>
+                <span>{{ arrTours?.length }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover table-striped table-condensed text-center custom-table" id="tblEventHistory" style="min-height: 150px">
+              <thead class="custom-table-header">
+                <tr>
+                  <th class="trn">#</th>
+                  <th class="trn">Zone</th>
+                  <th class="trn">Route</th>
+                  <th class="trn">Guard</th>
+                  <th class="trn">Device</th>
+                  <th class="trn">Date</th>
+                  <th class="trn">Started</th>
+                  <th class="trn">Finished</th>
+                  <th class="trn">Point</th>
+                  <th class="trn">Checked</th>
+                  <th class="trn">Timing</th>
+                  <th class="trn">Current</th>
+                  <th class="trn">Distance</th>
+                  <th class="trn">Processed</th>
+                  <th class="trn"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let tour of arrTours | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ tour.sZoneName }}</td>
+                  <td>{{ tour.sRouteName }}</td>
+                  <td>{{ tour.sGuardName }}</td>
+                  <td>{{ tour.sDeviceName }}</td>
+                  <td>{{ tour.dDateTimeIntinial }}</td>
+                  <td>{{ tour.dDateTimeStart }}</td>
+                  <td>{{ tour.dDateTimeEnd }}</td>
+                  <td>{{ tour.iCountPoint }}</td>
+                  <td>{{ tour.iCheckedPoint }}</td>
+                  <td>{{ tour.iTimeComplete }}</td>
+                  <td>{{ tour.iTimeCurrent }}</td>
+                  <td>{{ tour.dDistance }}</td>
+                  <td>{{ showProcessedStatus(tour.iError) }}</td>
+                  <td>
+                    <div class="btn-group" mdbDropdown>
+                      <button mdbDropdownToggle type="button" class="btn btn-custom bg-main-color btn-custom-small dropdown-toggle" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false">
+                        <span class="trn">Action</span>
+                      </button>
+                      <div class="dropdown-menu" >
+                        <button class="btn btn-custom btn-success btn-custom-small dropdown-item trn" style=" margin-top:-5px" (click)="showTourDetailsMap(tour)">Map</button>
+                        <button class="btn btn-custom btn-info btn-custom-small dropdown-item trn" style=" margin-top:-5px; margin-left: 5px" (click)= "showTourHistoryDetails(tour)">Details</button>
+                        <button class="btn btn-custom btn-warning btn-custom-small dropdown-item trn btn-show-accept-confirm" style=" margin-top:-5px; margin-left: 5px" (click)="showAcceptConfirm(tour)">Accept</button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<div mdbModal #modalTourDetails="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalTourDetails.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h6 class="modal-title w-100" id="myModalLabel">History Details</h6>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <div class="table-responsive">
+              <table class="table table-hover table-striped text-center custom-table">
+                <thead class="custom-table-header">
+                  <tr>
+                    <th class="trn">Name of Guard</th>
+                    <th class="trn">Point ID</th>
+                    <th class="trn">Name of Point</th>
+                    <th class="trn">Status</th>
+                    <th class="trn">Datetime</th>
+                    <th class="trn">KindCheck</th>
+                    <th class="trn">#</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let detail of arrDetails">
+                    <td>{{ detail.sGuardName }}</td>
+                    <td>{{ detail.iPointID }}</td>
+                    <td>{{ detail.sPointName }}</td>
+                    <td>{{ detail.sStatus }}</td>
+                    <td>{{ detail.dDateTimeHistory }}</td>
+                    <td>{{ detail.KindCheck }}</td>
+                    <td>{{ detail.iNo }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mdbModal #modalMap="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-custom" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalMap.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h6 class="modal-title w-100" id="myModalLabel">Tour Map</h6>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <div #tourDetailsMap class="mymap"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-alert-success #alertSuccess [content]="alertSuccessContent">
+
+</app-alert-success>
+
+<app-alert-error #alertError [content]="alertErrorContent">
+
+</app-alert-error>
+
+<app-alert-warning #alertAcceptReject [content]="alertAcceptRejectContent" [type]="2" (rejectEvent)="reject()" (acceptEvent)="accept()">
+
+</app-alert-warning>

@@ -1,0 +1,114 @@
+<div class="container-fluid">
+
+  <div class="row mt-3">
+    <div class="col-lg-12">
+      <div class="card card-reportAttendance">
+        <!-- card header -->
+        <div class="card-header bg-main-color custom-card-header">
+          <h4 class="trn">Live Attendance</h4>
+        </div>
+        <div class="card-body custom-card-body">
+          <div class="row my-3">
+            <div class="col-sm-8">
+              <div>
+                <pagination-controls (pageChange)="currentPage = $event">
+
+                </pagination-controls>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div id="totalReportAttendance"></div>
+            </div>
+          </div>
+          <div class="row mt-1">
+            <div class="table-responsive">
+              <table class="table table-hover table-striped table-condensed text-center custom-table" id="tblReportAttendance">
+                <thead class="custom-table-header">
+                  <tr>
+                    <th class="trn">Guard Name</th>
+                    <th class="trn">Date</th>
+                    <th class="trn">Request time</th>
+                    <th class="trn">Response time</th>
+                    <th class="trn">Delay</th>
+                    <th class="trn">Image</th>
+                    <th class="trn">Map</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of arrAttendanceData | paginate: { itemsPerPage: 10, currentPage: currentPage }">
+                    <td>{{ item.sGuardName }}</td>
+                    <td>{{ item.dDate }}</td>
+                    <td>{{ item.dDateTimeCheck }}</td>
+                    <td>{{ item.dDateTimeRespone }}</td>
+                    <td>{{ item.iDelay }}</td>
+                    <td>
+                      <img [src]="showImgSrc(item)" class="img-report-att" style="width:80px; height: 120px" (click)="showImageModal(item)">
+                    </td>
+                    <td>
+                      <button class="btn btn-custom bg-main-color btnShowAttendanceMap btn-custom-small" (click)="showMap(item)">Map</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div mdbModal #modalImage="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog small-dialog-modal" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalImage.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h6 class="modal-title w-100" id="myModalLabel">Attendance Image</h6>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <img [src]="currentImgSrc" alt="" class="img-fluid img-thumbnail" style="margin: auto; width: 100%;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div mdbModal #modalMap="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-super-lg-custom" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalMap.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h6 class="modal-title w-100" id="myModalLabel">Attendance Map</h6>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <div #mapAttendance class="mymap">
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-alert-success #alertSuccess [content]="alertSuccessContent">
+
+</app-alert-success>
+
+<app-alert-error #alertError [content]="alertErrorContent">
+
+</app-alert-error>

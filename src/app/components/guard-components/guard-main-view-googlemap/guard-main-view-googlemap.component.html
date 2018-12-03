@@ -1,0 +1,19 @@
+<div class="card card-map-guard">
+  <div class="card-header bg-main-color custom-card-header">
+    <div class="row">
+      <div class="col-12">
+        <h5 class="custom-title-header trn">Map</h5>
+      </div>
+    </div>
+  </div>
+  <div class="card-body custom-card-body">
+    <!-- <agm-map (mapReady)="mapReady($event)" [latitude]="centerLat" [longitude]="centerLng" [scrollwheel]="true" [zoom]="16" [fullscreenControl]="true" [mapTypeControl]="true" [usePanning]='true'>
+      <agm-marker *ngFor="let g of arrOnlineVsSOSList" [latitude]="g.dGuardLatCurrent" [longitude]="g.dGuardLongCurrent" [iconUrl]="showIcon(g)">
+        <agm-info-window [isOpen]="true">
+          <div>{{ g.sGuardName }}</div>
+        </agm-info-window>
+      </agm-marker>
+    </agm-map> -->
+    <div class="map guard-map" #mapArea></div>
+  </div>
+</div>

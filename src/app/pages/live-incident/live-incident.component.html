@@ -1,0 +1,150 @@
+<div class="container-fluid">
+
+  <div class="row my-3 row-custom">
+    <!-- filter and incident card -->
+    <div class="col-lg-2">
+      <!-- card filter start -->
+      <div class="card card filter">
+        <div class="card-header bg-main-color custom-card-header">
+          <h4>
+            <i class="fa fa-filter"></i>
+            <span class="trn">Filter</span>
+          </h4>
+        </div>
+        <div class="card-body custom-card-body">
+          <!-- selectIncident -->
+          <div class="row mt-3">
+            <div class="col-12">
+              <label for="" class="trn">Incident</label>
+              <br>
+              <app-select-incident-list #selectIncident [all]="true" [type]="1" (changeEvent)="showLiveIncidentList()")>
+
+              </app-select-incident-list>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-12">
+              <button class="btn btn-custom bg-main-color pull-right trn" (click)="showAllIncidentMap()">Map</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- card filter end -->
+    </div>
+
+    <div class="col-lg-10">
+
+      <!-- card incident start -->
+      <div class="card card-incident">
+        <div class="card-header bg-main-color custom-card-header">
+          <h4>
+            <i class="fa fa-exclamation-triangle"></i>
+            <span class="trn">Live Incident</span>
+          </h4>
+        </div>
+        <div class="card-body custom-card-body">
+          <div class="row my-3">
+            <div class="col-sm-8">
+              <div>
+                <pagination-controls (pageChange)="currentPage = $event">
+
+                </pagination-controls>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div id="totalIncidents">
+                <strong>Total Incidents: </strong> <span>{{ arrLiveIncidentList?.length }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover table-striped table-condensed text-center custom-table" id="tblIncidents">
+              <thead class="custom-table-header">
+                <tr>
+                  <th class="trn">Name of Guard</th>
+                  <th class="trn">Route</th>
+                  <th class="trn">Date</th>
+                  <th class="trn">Incident</th>
+                  <th class="trn">Started</th>
+                  <th class="trn">Finished</th>
+                  <th class="trn">Time spent</th>
+                  <th class="trn">Status</th>
+                  <th class="trn">Image</th>
+                  <th class="trn">Map</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let incident of arrLiveIncidentList | paginate: { itemsPerPage: 10, currentPage: currentPage }">
+                  <td>{{ incident.sGuardName }}</td>
+                  <td>{{ incident.sRouteName }}</td>
+                  <td>{{ incident.dDateTimeIntinial }}</td>
+                  <td>{{ incident.sAlertDescription }}</td>
+                  <td>{{ incident.dDateTimeStart }}</td>
+                  <td>{{ incident.dDateTimeEnd }}</td>
+                  <td>{{ incident.iTimeSpent }}</td>
+                  <td>{{ incident.ProcessAlert }}</td>
+                  <td>
+                    <img src="{{ getImageIncidentUrl(incident.ImageUrl) }}" alt="Image here" style="width:60px; height: 80px" (click)="showIncidentImage(incident.ImageUrl)">
+                  </td>
+                  <td>
+                    <button class="btn btn-custom bg-main-color btnShowIncidentMap btn-custom-small" (click)="showMapIncident(incident)">Map</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- card incident end -->
+    </div>
+  </div>
+
+<div mdbModal #modalImage="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog small-dialog-modal" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalImage.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h6 class="modal-title w-100" id="myModalLabel">Incident Image</h6>
+      </div>
+      <div class="modal-body">
+        <img src="{{ currentImgUrl }}" alt="" class="img-fluid img-thumbnail" style="margin: auto; width: 100%" id="incidentImg">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mdbModal #modalMap="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-super-lg-custom" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalMap.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h6 class="modal-title w-100" id="myModalLabel">Incident Map</h6>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <div #mapIncident class="mymap">
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-alert-success #alertSuccess [content]="alertSuccessContent">
+
+</app-alert-success>
+
+<app-alert-error #alertError [content]="alertErrorContent">
+
+</app-alert-error>
+  
+</div>

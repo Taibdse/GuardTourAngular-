@@ -1,0 +1,192 @@
+<div class="container-fluid">
+
+  <div class="row my-3 row-custom">
+
+    <div class="col-lg-3 mb-4">
+        <!-- card filter start -->
+        <div class="card card filter">
+          <div class="card-header bg-main-color custom-card-header">
+            <h4>
+              <i class="fa fa-filter"></i> <span class="trn">Search</span>
+            </h4>
+          </div>
+          <div class="card-body custom-card-body">
+            <div class="row mt-3">
+              <div class="col-12">
+                <label for="" class="trn">by Route</label><br>
+                  <app-select-route-list #selectRoute [type]="1" [all]="false">
+
+                  </app-select-route-list>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-12">
+                <label for="" class="trn">by Date</label><br>
+                <div class="form-group">
+                    <input type="text"
+                    placeholder="Choose date"
+                    class="form-control"
+                    placement="right"
+                    #datePicker="bsDatepicker"
+                    [(ngModel)]="currentDateVal"
+                    bsDatepicker>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-12">
+                <button class="btn btn-custom bg-main-color pull-right trn" (click)="showReportData()">View</button>
+                <button class="btn btn-custom bg-main-color pull-right trn">Export</button>
+                <button class="btn btn-custom bg-main-color pull-right trn" (click)="showModalChartReport()">Chart</button>
+                <button class="btn btn-custom bg-main-color pull-right trn" (click)="showModalEnterManager()">Manager</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- card filter end -->
+    </div>
+
+    <div class="col-lg-9">
+      <!-- card Points start -->
+      <div class="card card-daily-report-of-guard">
+        <div class="card-header bg-main-color custom-card-header">
+          <h4>
+            <i class="fa fa-exclamation-triangle"></i> <span class="trn">Reports</span>
+          </h4>
+        </div>
+        <div class="card-body custom-card-body printing-area">
+          <div class="row my-3">
+            <div class="col-md-5">
+              <img src="./assets/img/logo.png" class="img-fluid">
+            </div>
+            <div class="col-md-7">
+                <h1 class="trn text-uppercase mt-2" style="margin: 0; padding: 0">Daily Patrolling Report</h1>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div>
+                <strong>Reported by: </strong> <span class="manager-name">{{ currentManager }}</span>
+              </div>
+              <div>
+                <strong>Route: </strong> 
+                <span>{{ currentRouteName }}</span>
+              </div>
+              <div>
+                <strong>Start date: </strong>
+                <span>{{ currentStartDate }}</span>
+              </div>
+              <div>
+                <strong class="mr-2">End date: </strong>
+                <span>{{ currentEndDate }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover table-striped table-condensed custom-table" id="tblReports">
+              <thead class="custom-table-header">
+                  <tr>
+                    <th class="trn text-center">No.</th>
+                    <th class="trn">Criteria</th>
+                    <th class="trn text-center">Cal</th>
+                    <th class="trn text-center">Patrol Guard Route</th>
+                  </tr>
+              </thead>
+              <tbody *ngIf="arrCurrentReportData">
+                  <tr *ngFor="let i of arrIndex">
+                    <td class="trn text-center">{{ i + 1 }}</td>
+                    <td class="trn">{{ arrCriteriaReport[i] }}</td>
+                    <td class="trn text-center">{{ arrReportCal[i] }}</td>
+                    <td class="trn text-center">{{ arrCurrentReportData[0][arrPropsReport[i]] }} {{ unitsOfData[i] }}</td>
+                  </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="row">
+              <div class="col-md-6" id="chartImagePatrolling">
+                
+              </div>
+              <div class="col-md-6" id="chartImageTime">
+
+              </div>
+            </div>
+        </div>
+      </div>
+      <!-- card Points end -->
+      <div id="chartPrintingArea">
+        <div class="row">
+          <div class="col-md-6" id="chartPatrollingPrinting">
+            
+          </div>
+          <div class="col-md-6" id="chartTimePrinting">
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div mdbModal #modalManager="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalManager.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h5 class="modal-title w-100" id="myModalLabel">Manager</h5>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group">
+              <label for="">Manager</label>
+              <input type="text" class="form-control" id="txtManagerName" placeholder="Enter name ..." [(ngModel)]="currentManager">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mdbModal #modalChart="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-custom" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalChart.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h5 class="modal-title w-100">Chart Report</h5>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <div class="text-center font-weight-bold green-text headerChartReport" style="font-size: 1.1em">
+
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6" id="chartPatrollingModal">
+           
+          </div>
+          <div class="col-md-6" id=chartTimeModal>
+           
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-alert-success #alertSuccess [content]="alertSuccessContent">
+
+</app-alert-success>
+
+<app-alert-error #alertError [content]="alertErrorContent">
+
+</app-alert-error>

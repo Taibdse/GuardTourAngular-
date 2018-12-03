@@ -1,0 +1,293 @@
+<div class="container-fluid">
+
+  <div class="row my-2 row-custom">
+    <div class="col-lg-8 mt-3">
+      <!-- card route map start-->
+      <div class="card card-route-map custom-height">
+        <div class="card-header bg-main-color custom-card-header">
+          <h5 class="trn">
+            Route Map
+          </h5>
+        </div>
+        <div class="card-body custom-card-body">
+          <div #routeMapArea style="height: 60vh"></div>
+        </div>
+      </div>
+      <!-- card route map start-->
+    </div>
+
+    <!-- <mat-checkbox #matCheckbox [(ngModel)]="checkbox">Check me!</mat-checkbox>
+    import {MatButtonModule, MatCheckboxModule} from '@angular/material'; -->
+
+    <div class="col-lg-4 mt-3">
+      <div class="row">
+        <div class="col-6 mb-1">
+          <div class="card card-points custom-height">
+            <div class="card-header custom-card-header bg-main-color">
+              <h5>
+                <span class="trn">Select point</span>
+              </h5>
+            </div>
+            <div class="card-body custom-card-body">
+              <div class="form-group">
+                <label class="trn">Selected zone</label>
+                <app-select-zone-list #selectZones [type]="1" [all]="false" (changeEvent)="handleChangeZone()">
+
+                </app-select-zone-list>
+              </div>
+
+              <ul class="list-group">
+                <li class="list-group-item" *ngFor="let point of arrPointsOnZone">
+                  <input type="checkbox" class="checkbox-custom checkboxPoint" style="margin-right: 10px" [(ngModel)]="point.checked" (change)="showSelectedPoints()">
+                  <span class="point">{{ point.iPointID }} - {{ point.type }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+        <div class="col-6 mb-1">
+          <div class="card custom-height">
+            <div class="card-header bg-main-color custom-card-header">
+              <div class="row">
+                <div class="col-12">
+                  <button class="btn btn-custom btn-success trn btn-block my-2" (click)="showInsertModal()">Save Route</button>
+                </div>
+              </div>
+            </div>
+            <div class="card-body custom-card-body">
+              <div class="sortable points" id="selectedPointsOnRoute">
+                <ngx-sortable [items]="arrSelectedPointsOnRoute" [name]="'Points'" (listSorted)="listSorted($event)" [listStyle]="sortableListStyle">
+                  <ng-template let-point>
+                      <div class="alert alert-warning alert-dismissible fade show" role="alert" style="cursor: pointer;">
+                        <strong>
+                          {{ point.iPointID }} - {{ point.type }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="removeSelectedPoint(point)">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                  </ng-template>
+                </ngx-sortable>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-lg-12">
+      <div class="card card-route">
+        <div class="card-header bg-main-color custom-card-header">
+          <h5>
+            <i class="fa fa-exclamation-triangle"></i> <span class="trn">Route list</span>
+          </h5>
+        </div>
+        <div class="card-body custom-card-body">
+          <div class="row my-3">
+            <div class="col-sm-8">
+              <div>
+                <pagination-controls (pageChange)="currentPage = $event">
+
+                </pagination-controls>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div id="totalRoutes">
+                <strong>Total Routes: </strong>
+                <span>{{ arrRoutesOnZone?.length }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-hover table-striped table-condensed text-center custom-table" id="tblRoutes">
+              <thead class="custom-table-header">
+                <tr>
+                  <th class="trn">#</th>
+                  <th class="trn">Zone</th>
+                  <th class="trn">Route</th>
+                  <th class="trn">Device</th>
+                  <th class="trn">Distance</th>
+                  <th class="trn">Speed</th>
+                  <th class="trn">Min time</th>
+                  <th class="trn">Max time</th>
+                  <th class="trn">Break time</th>
+                  <th class="trn">Tour execute</th>
+                  <th class="trn">Updated</th>
+                  <th class="trn"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let route of arrRoutesOnZone | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ route.sZoneName }}</td>
+                  <td>{{ route.sRouteName }}</td>
+                  <td>{{ route.sDeviceName }}</td>
+                  <td>{{ route.dDistance }} km</td>
+                  <td>{{ route.iSpeed }} km/h</td>
+                  <td>{{ route.iMinTime }} min</td>
+                  <td>{{ route.iTimeComplete }} min</td>
+                  <td>{{ route.iBreakTime }}</td>
+                  <td>{{ route.iTourExecute }}</td>
+                  <td>{{ route.dDateTimeUpdate }}</td>
+                  <td>
+                    <div class="btn-group" mdbDropdown>
+                      <button mdbDropdownToggle type="button" class="btn btn-custom bg-main-color btn-custom-small dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <span>Action</span>
+                      </button>
+                      <div class="dropdown-menu" >
+                        <button class="btn btn-custom btn-success btnRouteViewMap btn-custom-small dropdown-item trn" (click)="showRouteMapOnModal(route)">Map</button>
+                        <button class="btn btn-custom btn-info btnRouteUpdateGuard btn-custom-small dropdown-item trn" (click)="showUpdateModal(route)">Update Route</button>
+                        <button class="btn btn-custom btn-warning btnInactiveRoute btn-custom-small dropdown-item trn" (click)="showConfirmDelete(route)">Lock</button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mdbModal #modalInsert="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalInsert.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h5 class="modal-title w-100">Insert route</h5>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="font-weight-bold trn">Route Name</label>
+          <input type="text" placeholder="Enter name.." [(ngModel)]="currentRoute.sRouteName" class="form-control">
+        </div>
+        <div>
+          <label class="font-weight-bold trn">Type of Route</label><br>
+          <span class="trn mr-3">Circle Line</span>
+          <input type="radio" checked name="txtInsertRouteType" value="circle" (change)="changeRouteType($event)"><br>
+          <span class="trn mr-3">Straight Line</span>
+          <input type="radio" name="txtInsertRouteType" value="line" (change)="changeRouteType($event)">
+        </div><br>
+        
+        <div class="form-group">
+          <label class="font-weight-bold trn">Dístance (km)</label>
+          <input type="text" placeholder="Distance (km)" [(ngModel)]="currentRoute.dDistance" class="form-control" disabled>
+        </div>
+        <div class="form-group">
+          <label class="font-weight-bold trn">Speed (km/h)</label>
+          <input type="text" placeholder="Speed (km/h)" class="form-control speed" [(ngModel)]="currentRoute.iSpeed" (input)="showMinTime($event)">
+        </div>
+        <div class="form-group">
+          <label class="font-weight-bold trn">Min time (min)</label>
+          <input type="text" placeholder="Min time (min)" class="form-control txtMinTime" [(ngModel)]="currentRoute.iMinTime" disabled>
+        </div>
+        <div class="form-group">
+          <label class="font-weight-bold trn">Time Completion (max)</label>
+          <input type="text" placeholder="Time Completion (min)" class="form-control maxTime" [(ngModel)]="currentRoute.iTimeComplete">
+        </div>
+        <div class="form-group">
+          <label class="font-weight-bold trn">Break time</label>
+          <input type="text" placeholder="Break time" class="form-control breakTime" [(ngModel)]="currentRoute.iBreakTime" (input)="showTourExecute($event)">
+          </div>
+        <div class="form-group">
+          <label class="font-weight-bold trn">Tour execute</label>
+          <input type="text" placeholder="Tour execute" class="form-control tourExecute" [(ngModel)]="currentRoute.iTourExecute">
+        </div>
+        <div class="form-group">
+          <label class="font-weight-bold trn">Device use</label>
+          <app-select-device-list #selectDeviceInsert [type]="1" [all]="false">
+
+          </app-select-device-list>
+        </div>
+        <button class="btn btn-custom btn-success pull-right" (click)="insertRoute()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mdbModal #modalUpdate="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalUpdate.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h5 class="modal-title w-100">Update route</h5>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="font-weight-bold trn">Route Name</label>
+          <input type="text" placeholder="Enter name.." [(ngModel)]="currentRoute.sRouteName" class="form-control">
+        </div>
+        <div class="form-group">
+          <label class="font-weight-bold trn">Dístance (km)</label>
+          <input type="text" placeholder="Distance (km)" [(ngModel)]="currentRoute.dDistance" class="form-control" disabled>
+        </div>
+        <div class="form-group">
+          <label class="font-weight-bold trn">Speed (km/h)</label>
+          <input type="text" placeholder="Speed (km/h)" class="form-control speed" [(ngModel)]="currentRoute.iSpeed" (input)="showMinTime($event)">
+        </div>
+        <div class="form-group">
+          <label class="font-weight-bold trn">Min time (min)</label>
+          <input type="text" placeholder="Min time (min)" class="form-control txtMinTime" [(ngModel)]="currentRoute.iMinTime" disabled>
+        </div>
+        <div class="form-group">
+          <label class="font-weight-bold trn">Time Completion (max)</label>
+          <input type="text" placeholder="Time Completion (min)" class="form-control maxTime" [(ngModel)]="currentRoute.iTimeComplete">
+        </div>
+        <div class="form-group">
+          <label class="font-weight-bold trn">Break time</label>
+          <input type="text" placeholder="Break time" class="form-control breakTime" [(ngModel)]="currentRoute.iBreakTime" (input)="showTourExecute($event)">
+          </div>
+        <div class="form-group">
+          <label class="font-weight-bold trn">Tour execute</label>
+          <input type="text" placeholder="Tour execute" class="form-control tourExecute" [(ngModel)]="currentRoute.iTourExecute">
+        </div>
+        <div class="form-group">
+          <label class="font-weight-bold trn">Device use</label>
+          <app-select-device-list #selectDeviceUpdate [type]="1" [all]="false">
+
+          </app-select-device-list>
+        </div>
+        <button class="btn btn-custom btn-success pull-right" (click)="updateRoute()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mdbModal #modalMap="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-super-lg-custom" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalMap.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h5 class="modal-title w-100">Route Map</h5>
+      </div>
+      <div class="modal-body">
+        <div class="mymap" #routeMapModal></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-alert-success #alertSuccess [content]="alertSuccessContent">
+
+</app-alert-success>
+
+<app-alert-error #alertError [content]="alertErrorContent">
+
+</app-alert-error>
+
+<app-alert-warning #alertWarning [content]="alertWarningContent" (confirmEvent)="deleteRoute()"></app-alert-warning>

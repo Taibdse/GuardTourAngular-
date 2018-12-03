@@ -1,0 +1,114 @@
+<div class="card card-guard">
+  <div class="card-header bg-main-color custom-card-header">
+    <div class="row" style="padding: 0">
+      <div class="col-sm-4">
+        <h5 class="trn mt-1 custom-title-header">Guards</h5>
+      </div>
+      <div class="col-sm-8" style="padding-right: 0">
+        <button class="btn bg-success btn-custom pull-right trn text-capitalize btn-small" style="padding: 5px;"
+          (click)="showModalSendSMS()">Message</button>
+        <button class="btn bg-success btn-custom btn-small pull-right trn text-capitalize btn-small" style="padding: 5px;" (click)="showModalConfirm()">Check Time</button>
+      </div>
+    </div>
+  </div>
+  <div class="card-body custom-card-body">
+    <div class="row mt-2">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <input #txtSearchGuardName type="text" placeholder="Search name..." class="form-control form-control-sm" (keyup)="filterGuardsList()">
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="form-group">
+          <app-select-group-list #selectGroupList [type]="1" [all]="true" [formControlSm]="true" (changeEvent)="filterGuardsList()"></app-select-group-list>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <span class="font-weight-bold">Total: {{ arrGuardList.length }}</span>
+      </div>
+      <div class="col-4">
+        <span class="green-text">Online: {{ onlineNum }}</span>
+      </div>
+      <div class="col-4">
+        <span class="red-text">SOS: {{ sosNum }}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="table-responsive" style="height: 60vh">
+          <table class="table table-striped table-hover custom-table text-center">
+            <thead class="custom-table-header">
+              <tr>
+                <th class="trn">
+                  <mdb-checkbox [default]="true" [(ngModel)]="checkedAll" (change)="checkAll($event)"></mdb-checkbox>
+                </th>
+                <th class="trn">#</th>
+                <th class="trn">Name</th>
+                <th class="trn">Last visited</th>
+                <th class="trn">Speed</th>
+              </tr>
+            </thead>
+            <tbody style="height: 50vh; overflow-y: auto">
+              <tr *ngFor="let guard of arrFilteredGuardList; let i = index">
+                <td class="trn">
+                  <mdb-checkbox [default]="true" [(ngModel)]="guard.checked" (change)="checkGuard($event, guard)"></mdb-checkbox>
+                </td>
+                <td>{{ i + 1 }}</td>
+                <td [ngClass]="{ 'red-text': isSOS(guard), 'green-text': isOnline(guard) }">{{ guard.sGuardName }}</td>
+                <td>{{ guard.dLastUpdateTime }}</td>
+                <td>{{ guard.dSpeedCurrent }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- modal send message -->
+<div mdbModal #modalSendSMS="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalSendSMS.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title w-100" id="myModalLabel">Send Message</h4>
+      </div>
+      <div class="modal-body">
+        <div>
+          <strong class="trn">Guards</strong>
+          <ul class="list-group">
+            <li class="list-group-item">
+              <span>{{ strSMSGuardNames }}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="form-group">
+          <label for="">
+            <strong class="trn">Message</strong>
+          </label>
+          <textarea cols="30" rows="10" class="form-control" [(ngModel)]="sentMessage" placeholder="Type message here..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" mdbBtn color="success" class="waves-light btn btn-custom bg-main-color trn" aria-label="Close" (click)="modalSendSMS.hide()"
+          mdbWavesEffect>Close</button>
+        <button type="button" mdbBtn color="secondary" class="waves-light btn btn-custom btn-success trn" aria-label="Close" (click)="sendMessage()"
+          mdbWavesEffect>Send</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-alert-success #alertSuccess [content]="'Send SMS Successfully!!!'" ></app-alert-success>
+
+<app-alert-error #alertError [content]="'You must choose guards who is online or SOS'"></app-alert-error>
+
+<app-alert-warning #alertWarning [content]="'Are you sure?'" (confirmEvent)="checkTime()"></app-alert-warning>
+
+

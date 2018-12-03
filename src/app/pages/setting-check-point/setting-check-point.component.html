@@ -1,0 +1,291 @@
+<div class="container-fluid">
+
+  <div class="row my-3 row-custom">
+    <!-- filter and incident card -->
+    <div class="col-lg-3">
+      <!-- card filter start -->
+      <div class="card card filter">
+        <div class="card-header bg-main-color custom-card-header">
+          <h4>
+            <i class="fa fa-filter"></i> <span class="trn">Search</span>
+          </h4>
+        </div>
+        <div class="card-body custom-card-body">
+          <div class="row mt-3">
+            <div class="col-12">
+              <label for="" class="trn">by Zone</label>
+              <br>
+              <app-select-zone-list #selectZones [type]="1" [all]="true" (changeEvent)="showPoints()">
+
+              </app-select-zone-list>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-12">
+              <!-- <button class="btn btn-custom bg-main-color pull-right trn" id="btnPointsData" (click)="showPoints()">View</button> -->
+              <button class="btn btn-custom bg-main-color pull-right trn" id="btnMapAllPoints">Map</button>
+              <button class="btn btn-custom bg-main-color pull-right trn" id="btnShowInsertPointModal" (click)="showInsertModal()">Insert</button>
+              <button class="btn btn-custom bg-main-color pull-right trn" id="">Export</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- card filter end -->
+    </div>
+
+    <div class="col-lg-9">
+      <!-- card Points start -->
+      <div class="card card-points">
+        <div class="card-header bg-main-color custom-card-header">
+          <h4>
+            <i class="fa fa-exclamation-triangle"></i> <span class="trn">Point list</span>
+          </h4>
+        </div>
+        <div class="card-body custom-card-body">
+          <div class="row my-3">
+            <div class="col-sm-8">
+                <div>
+                  <pagination-controls (pageChange)="currentPage = $event">
+
+                  </pagination-controls>
+                </div>
+            </div>
+            <div class="col-sm-4">
+              <div id="totalPoints">
+                <strong>Total Points: </strong>
+                <span>{{ arrPoints?.length }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover table-striped table-condensed text-center custom-table" id="tblPoints">
+              <thead class="custom-table-header">
+                <tr>
+                  <th class="trn">#</th>
+                  <th class="trn">ID</th>
+                  <th class="trn">Zone</th>
+                  <th class="trn">Name</th>
+                  <th class="trn">Note</th>
+                  <th class="trn">GPS</th>
+                  <th class="trn">QRCode</th>
+                  <th class="trn">RFID</th>
+                  <th class="trn">Updated</th>
+                  <th class="trn"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let point of arrPoints | paginate: { itemsPerPage: 10, currentPage: currentPage }; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ point.iPointID }}</td>
+                  <td>{{ point.sZoneName }}</td>
+                  <td>{{ point.sPointName }}</td>
+                  <td>{{ point.sPointNote }}</td>
+                  <td>{{ point.iGPS }}</td>
+                  <td>{{ point.iQRCode }}</td>
+                  <td>{{ point.iRFID }}</td>
+                  <td>{{ point.dDateTimeAdd }}</td>
+                  <td>
+                    <div class="btn-group" mdbDropdown>
+                      <button mdbDropdownToggle type="button" class="btn btn-custom bg-main-color btn-custom-small dropdown-toggle" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false">
+                      <span class="trn">Action</span>
+                    </button>
+                      <div class="dropdown-menu" >
+                        <button class="btn btn-custom btn-info btnPointUpdate btn-custom-small dropdown-item trn" (click)="showUpdateModal(point)">Update</button>
+                        <button class="btn btn-custom btn-danger btnPointDelete btn-custom-small dropdown-item trn" style="margin-left:-5px" (click)="showConfirmDelete(point)">Lock</button>
+                        <button class="btn btn-custom btn-success btnPointQuestions btn-custom-small dropdown-item trn" style="margin-left:-5px" (click)="showModalPointQuestionUpdate(point)">Add Questions</button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- card Points end -->
+    </div>
+  </div>
+
+  <!-- modal all points map -->
+  <div class="row">
+    <div class="col-12">
+      <div class="modal fade bd-example-modal-lg" id="modalMapPoint">
+        <div class="modal-dialog modal-dialog-super-lg-custom">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title trn">Point Map</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div mdbModal #modalInsert="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+aria-hidden="true">
+  <div class="modal-dialog modal-dialog-super-lg-custom" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalInsert.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h5 class="modal-title w-100">Insert Point</h5>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-8">
+            <div class="mymap" #mapInsertPoint></div>
+          </div>
+          <div class="col-lg-4">
+            <div class="form-group">
+              <label for="" class="font-weight-bold">Point code</label>
+              <input type="text" class="form-control" placeholder="Point code" [(ngModel)]="currentPoint.sPointCode">
+            </div>
+            <div class="form-group">
+              <label for="" class="font-weight-bold">GPS</label>
+              <input type="checkbox" name="checkboxGPS" value="GPS" checked disabled>
+              <label class="font-weight-bold">QRCode</label>
+              <input type="radio" name="radioIPChecked" value="QRCode" #radioInsertPointQRCode>
+              <label class="font-weight-bold">RFID</label>
+              <input type="radio" name="radioIPChecked" value="RFID" #radioInsertPointRFID>
+            </div>
+            <div class="form-group">
+                <label for="" class="font-weight-bold">Zone</label>
+                <app-select-zone-list #selectZoneInsert [type]="1" [all]="false">
+
+                </app-select-zone-list>
+            </div>
+            <div class="form-group">
+              <label for="" class="font-weight-bold">Name</label>
+              <input type="text" class="form-control" placeholder="Enter name" [(ngModel)]="currentPoint.sPointName">
+            </div>
+            <div class="form-group">
+              <label for="" class="font-weight-bold">Note</label>
+              <input type="text" class="form-control" placeholder="Enter note" [(ngModel)]="currentPoint.sPointNote">
+            </div>
+
+            <div>
+              <label for="" class="font-weight-bold">Lat: </label>
+              <span class="latPoint">
+                {{ currentPoint.dPointLat }}
+              </span>
+            </div>
+            <div>
+              <label for="" class="font-weight-bold">Long: </label>
+              <span class="longPoint">
+                {{ currentPoint.dPointLong }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-custom btn-success pull-right" (click)="insertPoint()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mdbModal #modalUpdate="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+aria-hidden="true">
+  <div class="modal-dialog modal-dialog-super-lg-custom" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalUpdate.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h5 class="modal-title w-100">Update Point</h5>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-8">
+            <div #mapUpdatePoint class="mymap"></div> 
+          </div>
+          <div class="col-lg-4">
+            <div class="form-group">
+              <label for="" class="font-weight-bold trn">Point code</label>
+              <input type="text" class="form-control" placeholder="Point code" [(ngModel)]="currentPoint.sPointCode" [disabled]="currentPoint.GPS">
+            </div>
+            <div class="form-group">
+              <label for="" class="font-weight-bold trn">Name</label>
+              <input type="text" class="form-control" [(ngModel)]="currentPoint.sPointName" placeholder="Enter name">
+            </div>
+            <div class="form-group">
+              <label for="" class="font-weight-bold trn">Note</label>
+              <input type="text" class="form-control" [(ngModel)]="currentPoint.sPointNote" placeholder="Enter note">
+            </div>
+            <div>
+              <label for="" class="font-weight-bold trn">Lat:</label>
+              <span class="latPoint">
+                {{ currentPoint.dPointLat }}
+              </span>
+            </div>
+            <div>
+              <label for="" class="font-weight-bold trn">Long:</label>
+              <span class="longPoint">
+                {{ currentPoint.dPointLat }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-custom btn-success pull-right mt-4" (click)="updatePoint()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mdbModal #modalUpdatePointQuestion="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalUpdatePointQuestion.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h5 class="modal-title w-100">Update Point Question</h5>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group">
+              <label for="" class="font-weight-bold">Question 1</label>
+              <app-select-incident-list #selectQuestion1 [all]="false" type="1">
+
+              </app-select-incident-list>
+            </div>
+            <div class="form-group">
+              <label for="" class="font-weight-bold">Question 2</label>
+              <app-select-incident-list #selectQuestion2 [all]="false" type="1">
+
+              </app-select-incident-list>
+            </div>
+            <div class="form-group">
+              <label for="" class="font-weight-bold">Question 3</label>
+              <app-select-incident-list #selectQuestion3 [all]="false" type="1">
+
+              </app-select-incident-list>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-custom btn-success pull-right mt-4" (click)="savePointQuestions()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-alert-success #alertSuccess [content]="alertSuccessContent">
+
+</app-alert-success>
+
+<app-alert-error #alertError [content]="alertErrorContent">
+
+</app-alert-error>
+
+<app-alert-warning #alertWarning [content]="alertWarningContent" (confirmEvent)="inActivePoint()"></app-alert-warning>
